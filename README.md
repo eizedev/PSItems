@@ -27,6 +27,26 @@ Since then, I don't have to bother with the Windows Explorer built-in search or 
 The term "**item**" in PSItems or also the individual function names is a collective term for all file system objects, such as files and directories.
 Therefore, for example, the function is called `Find-Item` and not `Find-File`, because with it also junctions, directories, shortcuts etc. can be found.
 
+## Roadmap
+
+> ``📝`` This module is currently under construction and therefore in BETA. The already integrated functions work basically but can still have errors.
+
+- Tests
+  - Add Pester Tests for `Get-ItemSize` and `Find-Item`
+    - [ ] Windows
+      - in progress
+    - [ ] Linux
+    - [ ] macOS
+      - in progress
+- Documentation
+  - Update documentation for functions with more, detailed examples
+    - [ ] `Find-Item`
+    - [ ] `Get-ItemSize`
+- Security
+  - Add code scanning using github workflow
+- New functions and features
+  - Further functions around FileSystem objects will be integrated if required. Suggestions are welcome
+
 ## Installation
 
 Installation of this module is straight forward, just install it and import it.
