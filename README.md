@@ -1,8 +1,8 @@
 # PSItems
 
-| GitHub Actions                                                         | PS Gallery                                          | License                              |
-| ---------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------ |
-| [![GitHub Actions Status][github-actions-badge]][github-actions-build] | [![PowerShell Gallery][psgallery-badge]][psgallery] | [![License][license-badge]][license] |
+| GitHub Actions                                                         | PS Gallery                                          | License                              | Issues                            |
+| ---------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------ | --------------------------------- |
+| [![GitHub Actions Status][github-actions-badge]][github-actions-build] | [![PowerShell Gallery][psgallery-badge]][psgallery] | [![License][license-badge]][license] | [![Issues][issues-badge]][isuses] |
 
 A PowerShell module that finds files and directories as well as file and directory information the quick and easy way!
 
@@ -118,3 +118,5 @@ If you find bugs, please report them on the issues page or, if you can, open a p
 [psgallery]: https://www.powershellgallery.com/packages/PSItems
 [license-badge]: https://img.shields.io/github/license/eizedev/PSItems.svg
 [license]: https://www.powershellgallery.com/packages/PSItems
+[issues-badge]: https://img.shields.io/github/issues-raw/eizedev/PSItems.svg
+[issues]: https://github.com/eizedev/PSItems/issues
