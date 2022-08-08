@@ -2,7 +2,7 @@
 
 | GitHub Actions                                                         | PS Gallery                                          | License                              | Issues                            |
 | ---------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------ | --------------------------------- |
-| [![GitHub Actions Status][github-actions-badge]][github-actions-build] | [![PowerShell Gallery][psgallery-badge]][psgallery] | [![License][license-badge]][license] | [![Issues][issues-badge]][isuses] |
+| [![GitHub Actions Status][github-actions-badge]][github-actions-build] | [![PowerShell Gallery][psgallery-badge]][psgallery] | [![License][license-badge]][license] | [![Open Issues][issues-badge]][issues]  |
 
 A PowerShell module that finds files and directories as well as file and directory information the quick and easy way!
 
