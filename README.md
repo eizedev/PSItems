@@ -8,6 +8,7 @@ A PowerShell module that finds files and directories as well as file and directo
 
 - [PSItems](#psitems)
   - [Overview](#overview)
+  - [Roadmap](#roadmap)
   - [Installation](#installation)
   - [Usage](#usage)
   - [Contributions](#contributions)
