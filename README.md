@@ -48,14 +48,19 @@ The usage and a few examples can be found in the [documentation folder](.\docs\e
 Get functions of module:
 
 ```pwsh
-Get-Command -Module PSItems
+Get-Command -Module PSItems -CommandType All
 ```
 
 ```pwsh
-CommandType     Name                                               Version      Source
------------     ----                                               -------      ------
-Function        Find-Item                                          0.1.1        PSItems
-Function        Get-ItemSize                                       0.1.1        PSItems
+CommandType     Name                                               Version    Source
+-----------     ----                                               -------    ------
+Alias           ff -> Find-Item                                    0.2.3      PSItems
+Alias           fi -> Find-Item                                    0.2.3      PSItems
+Alias           gis -> Get-ItemSize                                0.2.3      PSItems
+Alias           search -> Find-Item                                0.2.3      PSItems
+Alias           size -> Get-ItemSize                               0.2.3      PSItems
+Function        Find-Item                                          0.2.3      PSItems
+Function        Get-ItemSize                                       0.2.3      PSItems
 ```
 
 Get help of function:
