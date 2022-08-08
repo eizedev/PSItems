@@ -20,6 +20,8 @@ A PowerShell module that finds files and directories as well as file and directo
 As a person who works a lot with Linux distributions and had not found a way on Windows to find files or folders or their information in a FAST way, I developed this module or functions.
 At the beginning I was looking for an alternative to the Linux `find` and developed `Find-Item`.
 
+Of course, all the functions in this module will be working on Windows, Linux and macOS.
+
 `Get-ChildItem` works great to get an overview of current files and folders, but is very, very slow when dealing with a lot of filesystem objects.
 So I decided to use the .NET classes directly and used only the functionalities I really need for the particular case.
 
