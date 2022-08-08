@@ -42,8 +42,8 @@ The usage and a few examples can be found in the [documentation folder](.\docs\e
 
 | Cmdlet                                            | Description                                                                                         | Documentation                                  |
 | ------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| [Find-Item](.\PSItems\Public\Find-Item.ps1)       | Simple and fast function for finding any item on the filesystem (like find on linux/unix)           | [Find-Item.md]((.\docs\en-US\Find-Item))       |
-| [Get-ItemSize](.\PSItems\Public\Get-ItemSize.ps1) | Simple and fast function for getting the size of any item on the filesystem (like du on linux/unix) | [Get-ItemSize.md]((.\docs\en-US\Get-ItemSize)) |
+| [Find-Item](PSItems/Public/Find-Item.ps1)       | Simple and fast function for finding any item on the filesystem (like find on linux/unix)           | [Find-Item]((docs/en-US/Find-Item.md))       |
+| [Get-ItemSize](PSItems/Public/Get-ItemSize.ps1) | Simple and fast function for getting the size of any item on the filesystem (like du on linux/unix) | [Get-ItemSize]((docs/en-US/Get-ItemSize.md)) |
 
 Get functions of module:
 
