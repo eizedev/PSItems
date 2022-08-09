@@ -4,9 +4,13 @@
 | ---------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------ | --------------------------------- |
 | [![GitHub Actions Status][github-actions-badge]][github-actions-build] | [![PowerShell Gallery][psgallery-badge]][psgallery] | [![License][license-badge]][license] | [![Open Issues][issues-badge]][issues]  |
 
+---
+
 A PowerShell module that finds files and directories as well as file and directory information the quick and easy way!
 
 ![PSItems_small](https://user-images.githubusercontent.com/6794362/183587608-69d4adab-aeee-4f5f-8073-50685aa0c626.png)
+
+---
 
 - [PSItems](#psitems)
   - [Overview](#overview)
@@ -14,6 +18,8 @@ A PowerShell module that finds files and directories as well as file and directo
   - [Installation](#installation)
   - [Usage](#usage)
   - [Contributions](#contributions)
+
+---
 
 ## Overview
 
@@ -70,6 +76,10 @@ The usage and a few examples can be found in the [documentation folder](.\docs\e
 | [Find-Item](PSItems/Public/Find-Item.ps1)       | Simple and fast function for finding any item on the filesystem (like find on linux/unix)           | [Find-Item](docs/en-US/Find-Item.md)       |
 | [Get-ItemSize](PSItems/Public/Get-ItemSize.ps1) | Simple and fast function for getting the size of any item on the filesystem (like du on linux/unix) | [Get-ItemSize](docs/en-US/Get-ItemSize.md) |
 
+---
+
+### Functions 
+
 Get functions of module:
 
 ```pwsh
@@ -87,6 +97,10 @@ Alias           size -> Get-ItemSize                               0.2.3      PS
 Function        Find-Item                                          0.2.3      PSItems
 Function        Get-ItemSize                                       0.2.3      PSItems
 ```
+
+---
+
+### Help
 
 Get help of function:
 
@@ -114,7 +128,8 @@ The goal of this project is to write simple but (very) fast functions for findin
 
 Additional features or capabilities that benefit the community are welcome.
 
-If you find bugs, please report them on the issues page or, if you can, open a pull request directly with a solution.
+If you find bugs, please report them on the [issues page](https://github.com/eizedev/PSItems/issues) or, if you can, open a pull request directly with a solution.  
+If you have a good idea for improving individual features or for new features, feel free to let me know as well.
 
 [github-actions-badge]: https://github.com/eizedev/PSItems/workflows/CI/badge.svg
 [github-actions-build]: https://github.com/eizedev/PSItems/actions
