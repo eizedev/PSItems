@@ -69,7 +69,7 @@ Import-Module -Name PSItems
 
 ## Usage
 
-The usage and a few examples can be found in the [documentation folder](docs\en-US\) or by using the `Get-Help` cmdlet.
+The usage and a few examples can be found in the [documentation folder](docs/en-US/) or by using the `Get-Help` cmdlet.
 
 | Cmdlet                                            | Description                                                                                         | Documentation                                  |
 | ------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
