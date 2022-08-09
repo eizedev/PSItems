@@ -6,6 +6,8 @@
 
 A PowerShell module that finds files and directories as well as file and directory information the quick and easy way!
 
+![PSItems_small](https://user-images.githubusercontent.com/6794362/183587608-69d4adab-aeee-4f5f-8073-50685aa0c626.png)
+
 - [PSItems](#psitems)
   - [Overview](#overview)
   - [Roadmap](#roadmap)
