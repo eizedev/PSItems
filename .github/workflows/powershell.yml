@@ -11,12 +11,12 @@ name: PSScriptAnalyzer
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
   schedule:
-    - cron: '38 14 * * 2'
-    
+    - cron: "38 14 * * 2"
+
 permissions:
   contents: read
 
@@ -31,16 +31,16 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run PSScriptAnalyzer
-        uses: microsoft/psscriptanalyzer-action@2044ae068e37d0161fa2127de04c19633882f061
+        uses: microsoft/psscriptanalyzer-action@452b6222221f82be3420596e9bd148a7b2bb5bb8
         with:
           # Check https://github.com/microsoft/action-psscriptanalyzer for more info about the options.
           path: .\
           recurse: true
-          ignorePattern: 'tests'
-          includeDefaultRules: true 
+          ignorePattern: "tests"
+          includeDefaultRules: true
           settings: "tests/ScriptAnalyzerSettings.psd1"
           output: results.sarif
-      
+
       # Upload the SARIF file generated in the previous step
       - name: Upload SARIF results file
         uses: github/codeql-action/upload-sarif@v2
