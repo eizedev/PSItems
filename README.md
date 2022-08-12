@@ -17,6 +17,11 @@ A PowerShell module that finds files and directories as well as file and directo
   - [Roadmap](#roadmap)
   - [Installation](#installation)
   - [Usage](#usage)
+    - [Functions](#functions)
+    - [Help](#help)
+  - [Testing and Speed](#testing-and-speed)
+    - [1 - Windows directory recursively - Return FullName strings](#1---windows-directory-recursively---return-fullname-strings)
+    - [2 - Windows directory recursively - Return FileInfo objects](#2---windows-directory-recursively---return-fileinfo-objects)
   - [Contributions](#contributions)
 
 ---
@@ -78,7 +83,7 @@ The usage and a few examples can be found in the [documentation folder](docs/en-
 
 ---
 
-### Functions 
+### Functions
 
 Get functions of module:
 
@@ -126,11 +131,11 @@ SYNTAX
 
 > Testsystem was a windows 10 Lenovo T480 (SSD + Indexing disabled).
 
-### Test 1 - Windows directory recursively - Return FullName string
+### 1 - Windows directory recursively - Return FullName strings
 
 Returned will be an array of the path of all files (FullName).
 
-` Measure-Command { $windir = search C:\Windows\ '*' -Recurse -AttributesToSkip 0 }`
+`Measure-Command { $windir = search C:\Windows\ '*' -Recurse -AttributesToSkip 0 }`
 
 Finding all items (files, directories...) in `C:Windows` directory including all subdirectories (`-Recurse`) as well as hidden and system files (`-AttributesToSkip 0`) using the `Find-Item` function
 
@@ -138,9 +143,9 @@ The alias `search` was used and for the `-Path` (`C:\windows`) and `-Name` (`'*'
 
 ![image](https://user-images.githubusercontent.com/6794362/183594261-2f14beb8-be96-4181-8719-1b95ff271e62.png)
 
-In about 1 minute the function found all files, directories etc. in the complete windows directory and returned an array of all item `FullName` properties. 
+In about 1 minute the function found all files, directories etc. in the complete windows directory and returned an array of all item `FullName` properties.
 
-### Test 2 - Windows directory recursively - Return FileInfo Object
+### 2 - Windows directory recursively - Return FileInfo objects
 
 Returned will be an array of objects (FileInfo) of all items. Same as using Get-ChildItem.
 
@@ -150,10 +155,10 @@ Finding all items (files, directories...) in `C:Windows` directory including all
 
 The alias `search` was used and for the `-Path` (`C:\windows`) and `-Name` (`'*'`) parameter the first and second position were used:
 
-![image](https://user-images.githubusercontent.com/6794362/183596627-73995cca-a602-4ae7-9e75-8fe8b6d14d4a.png)  
+![image](https://user-images.githubusercontent.com/6794362/183596627-73995cca-a602-4ae7-9e75-8fe8b6d14d4a.png)
 ![image](https://user-images.githubusercontent.com/6794362/183596709-de8718c9-e361-4843-96f5-34e9677f840e.png)
 
-In about 2 minutes the function found all files, directories etc. in the complete windows directory and returned an array of FileInfo objects of all items with all properties. As with Get-ChildItem, you can simply continue to use the individual objects. 
+In about 2 minutes the function found all files, directories etc. in the complete windows directory and returned an array of FileInfo objects of all items with all properties. As with Get-ChildItem, you can simply continue to use the individual objects.
 
 ## Contributions
 
@@ -161,7 +166,7 @@ The goal of this project is to write simple but (very) fast functions for findin
 
 Additional features or capabilities that benefit the community are welcome.
 
-If you find bugs, please report them on the [issues page](https://github.com/eizedev/PSItems/issues) or, if you can, open a pull request directly with a solution.  
+If you find bugs, please report them on the [issues page](https://github.com/eizedev/PSItems/issues) or, if you can, open a pull request directly with a solution.
 If you have a good idea for improving individual features or for new features, feel free to let me know as well.
 
 [github-actions-badge]: https://github.com/eizedev/PSItems/workflows/CI/badge.svg
