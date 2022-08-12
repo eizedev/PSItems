@@ -69,7 +69,7 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = '*'
+    FunctionsToExport = @('Find-Item', 'Get-ItemSize')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport   = '*'
@@ -78,7 +78,7 @@
     VariablesToExport = '*'
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport   = '*'
+    AliasesToExport   = @('search','size')
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
@@ -95,19 +95,19 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags       = @('Get-ChildItem', 'FileManagement', 'find', 'search', 'du', 'Find-File', 'size', 'pwsh', 'directory', 'item', 'items' )
+            Tags         = @('Get-ChildItem', 'FileManagement', 'find', 'search', 'du', 'Find-File', 'size', 'pwsh', 'directory', 'item', 'items' )
 
             # A URL to the license for this module.
-            LicenseUri = 'https://github.com/eizedev/PSItems/blob/master/LICENSE'
+            LicenseUri   = 'https://github.com/eizedev/PSItems/blob/master/LICENSE'
 
             # A URL to the main website for this project.
-            ProjectUri = 'https://github.com/eizedev/PSItems'
+            ProjectUri   = 'https://github.com/eizedev/PSItems'
 
             # A URL to an icon representing this module.
-            # IconUri = ''
+            IconUri      = 'https://github.com/eizedev/PSItems/blob/master/res/logo.png'
 
             # ReleaseNotes of this module
-            # ReleaseNotes = ''
+            ReleaseNotes = 'https://github.com/eizedev/PSItems/blob/master/CHANGELOG.md'
 
             # Prerelease string of this module
             # Prerelease = ''
@@ -123,7 +123,7 @@
     } # End of PrivateData hashtable
 
     # HelpInfo URI of this module
-    HelpInfoURI       = 'https://github.com/eizedev/PSItems/tree/master/docs/en-US'
+    HelpInfoURI       = 'https://github.com/eizedev/PSItems/blob/master/README.md'
 
     # Default prefix for commands exported from this module. Override the default prefix using Import-Module -Prefix.
     # DefaultCommandPrefix = ''
