@@ -53,8 +53,9 @@ Uses all items (files + directories) in current folder and return size in MB
 ## PARAMETERS
 
 ### -Path
-Root path to search objects for.
-Defaults to current working directory
+Root path to search items for.
+Defaults to current working directory.
+The relative or absolute path to the directory to search. This string is not case-sensitive.
 
 ```yaml
 Type: String
@@ -69,8 +70,28 @@ Accept wildcard characters: False
 ```
 
 ### -Name
-(Default: '*' -\> all objects) One ore more strings to search for (f.e.
+This is the searchPattern for the Enumeration class.
+The search string to match against the names of items in path.
+This parameter can contain a combination of valid literal and wildcard characters,
+but it doesn't support regular expressions.
+You can use the * (asterisk) to match zero or more characters in that position.
+You can also use the ? (question mark) to exactly match one character in that position.
+
+Default is `'*'` = all items
+
+Characters other than the wildcard are literal characters.
+For example, the searchPattern string "*t" searches for all names in path ending with the letter "t". The searchPattern string "s*" searches for all names in path beginning with the letter "s".
+
+One ore more strings to search for (f.e.
 '*.exe' OR '*.exe','*.log' OR 'foo*.log')
+
+When you use the asterisk wildcard character in a searchPattern such as "*.txt", the number of characters in the specified extension affects the search as follows:
+
+- If the specified extension is exactly three characters long, the method returns files with extensions that begin with the specified extension. For example, "*.xls" returns both "book.xls" and "book.xlsx".
+- In all other cases, the method returns files that exactly match the specified extension. For example, "*.ai" returns "file.ai" but not "file.aif".
+
+When you use the question mark wildcard character, this method returns only files that match the specified file extension. For example, given two files, "file1.txt" and "file1.txtother", in a directory, a search pattern of "file?.txt" returns just the first file, whereas a search pattern of "file*.txt" returns both files.
+
 
 ```yaml
 Type: String[]

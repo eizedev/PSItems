@@ -10,11 +10,22 @@
     Class System.IO.EnumerationOptions does not exist in Powershell < 6 (so this function is not supported in the normal PowerShell, only in PowerShell Core/7)
 
     .PARAMETER Path
-    Root path to search objects for. Defaults to current working directory
+    Root path to search items for. Defaults to current working directory.
+    The relative or absolute path to the directory to search. This string is not case-sensitive.
 
     .PARAMETER Name
-    Default is '*' = all objects
+    (Default: '*')
+    This is the searchPattern for the Enumeration class.
+    The search string to match against the names of items in path.
+    This parameter can contain a combination of valid literal and wildcard characters,
+    but it doesn't support regular expressions.
+    You can use the * (asterisk) to match zero or more characters in that position.
+    You can also use the ? (question mark) to exactly match one character in that position.
+
+    Default is '*' = all items
+
     One ore more strings to search for (f.e. '*.exe' OR '*.exe','*.log' OR 'foo*.log')
+
 
 
     .PARAMETER Type
