@@ -38,7 +38,7 @@ jobs:
           recurse: true
           ignorePattern: "tests"
           includeDefaultRules: true
-          excludeRule: '"PSMissingModuleManifestField"'
+          excludeRule: '"PSUseToExportFieldsInManifest"'
           settings: "tests/ScriptAnalyzerSettings.psd1"
           output: results.sarif
 
