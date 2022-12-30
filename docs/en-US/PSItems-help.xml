@@ -19,7 +19,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
           <maml:name>Path</maml:name>
           <maml:description>
-            <maml:para>Root path to search objects for. Defaults to current working directory</maml:para>
+            <maml:para>Root path to search items for. Defaults to current working directory. The relative or absolute path to the directory to search. This string is not case-sensitive.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -31,7 +31,15 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
           <maml:name>Name</maml:name>
           <maml:description>
-            <maml:para>Default is '*' = all objects One ore more strings to search for (f.e. ' .exe' OR ' .exe',' .log' OR 'foo .log')</maml:para>
+            <maml:para>This is the searchPattern for the Enumeration class. The search string to match against the names of items in path. This parameter can contain a combination of valid literal and wildcard characters, but it doesn't support regular expressions. You can use the * (asterisk) to match zero or more characters in that position. You can also use the ? (question mark) to exactly match one character in that position.</maml:para>
+            <maml:para>Default is '*' = all items</maml:para>
+            <maml:para>Characters other than the wildcard are literal characters. For example, the searchPattern string " t" searches for all names in path ending with the letter "t". The searchPattern string "s " searches for all names in path beginning with the letter "s".</maml:para>
+            <maml:para>One ore more strings to search for (f.e. ' .exe' OR ' .exe',' .log' OR 'foo .log')</maml:para>
+            <maml:para>When you use the asterisk wildcard character in a searchPattern such as "*.txt", the number of characters in the specified extension affects the search as follows:</maml:para>
+            <maml:para>- If the specified extension is exactly three characters long, the method returns files with extensions that begin with the specified extension. For example, "*.xls" returns both "book.xls" and "book.xlsx".</maml:para>
+            <maml:para>- In all other cases, the method returns files that exactly match the specified extension. For example, "*.ai" returns "file.ai" but not "file.aif".</maml:para>
+            <maml:para></maml:para>
+            <maml:para>When you use the question mark wildcard character, this method returns only files that match the specified file extension. For example, given two files, "file1.txt" and "file1.txtother", in a directory, a search pattern of "file?.txt" returns just the first file, whereas a search pattern of "file*.txt" returns both files.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
           <dev:type>
@@ -55,7 +63,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Recurse</maml:name>
           <maml:description>
-            <maml:para>EnumerationOptions property RecurseSubdirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+            <maml:para>EnumerationOptions property RecurseSubdirectories. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
           </maml:description>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
@@ -66,7 +74,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>IgnoreInaccessible</maml:name>
           <maml:description>
-            <maml:para>EnumerationOptions property IgnoreInaccessible. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+            <maml:para>EnumerationOptions property IgnoreInaccessible. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
           <dev:type>
@@ -90,7 +98,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>MatchCasing</maml:name>
           <maml:description>
-            <maml:para>EnumerationOptions property MatchCasing. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+            <maml:para>EnumerationOptions property MatchCasing. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -102,7 +110,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>AttributesToSkip</maml:name>
           <maml:description>
-            <maml:para>EnumerationOptions property AttributesToSkip. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+            <maml:para>EnumerationOptions property AttributesToSkip. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
           <dev:type>
@@ -114,7 +122,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>MatchType</maml:name>
           <maml:description>
-            <maml:para>EnumerationOptions property MatchType. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+            <maml:para>EnumerationOptions property MatchType. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -126,7 +134,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Depth</maml:name>
           <maml:description>
-            <maml:para>EnumerationOptions property Depth. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+            <maml:para>EnumerationOptions property Depth. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
           <dev:type>
@@ -138,7 +146,7 @@
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>ReturnSpecialDirectories</maml:name>
           <maml:description>
-            <maml:para>EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+            <maml:para>EnumerationOptions property ReturnSpecialDirectories. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
           </maml:description>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
@@ -152,7 +160,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
         <maml:name>Path</maml:name>
         <maml:description>
-          <maml:para>Root path to search objects for. Defaults to current working directory</maml:para>
+          <maml:para>Root path to search items for. Defaults to current working directory. The relative or absolute path to the directory to search. This string is not case-sensitive.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -164,7 +172,15 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
         <maml:name>Name</maml:name>
         <maml:description>
-          <maml:para>Default is '*' = all objects One ore more strings to search for (f.e. ' .exe' OR ' .exe',' .log' OR 'foo .log')</maml:para>
+          <maml:para>This is the searchPattern for the Enumeration class. The search string to match against the names of items in path. This parameter can contain a combination of valid literal and wildcard characters, but it doesn't support regular expressions. You can use the * (asterisk) to match zero or more characters in that position. You can also use the ? (question mark) to exactly match one character in that position.</maml:para>
+          <maml:para>Default is '*' = all items</maml:para>
+          <maml:para>Characters other than the wildcard are literal characters. For example, the searchPattern string " t" searches for all names in path ending with the letter "t". The searchPattern string "s " searches for all names in path beginning with the letter "s".</maml:para>
+          <maml:para>One ore more strings to search for (f.e. ' .exe' OR ' .exe',' .log' OR 'foo .log')</maml:para>
+          <maml:para>When you use the asterisk wildcard character in a searchPattern such as "*.txt", the number of characters in the specified extension affects the search as follows:</maml:para>
+          <maml:para>- If the specified extension is exactly three characters long, the method returns files with extensions that begin with the specified extension. For example, "*.xls" returns both "book.xls" and "book.xlsx".</maml:para>
+          <maml:para>- In all other cases, the method returns files that exactly match the specified extension. For example, "*.ai" returns "file.ai" but not "file.aif".</maml:para>
+          <maml:para></maml:para>
+          <maml:para>When you use the question mark wildcard character, this method returns only files that match the specified file extension. For example, given two files, "file1.txt" and "file1.txtother", in a directory, a search pattern of "file?.txt" returns just the first file, whereas a search pattern of "file*.txt" returns both files.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
         <dev:type>
@@ -188,7 +204,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Recurse</maml:name>
         <maml:description>
-          <maml:para>EnumerationOptions property RecurseSubdirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+          <maml:para>EnumerationOptions property RecurseSubdirectories. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -200,7 +216,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>IgnoreInaccessible</maml:name>
         <maml:description>
-          <maml:para>EnumerationOptions property IgnoreInaccessible. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+          <maml:para>EnumerationOptions property IgnoreInaccessible. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
         <dev:type>
@@ -224,7 +240,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>MatchCasing</maml:name>
         <maml:description>
-          <maml:para>EnumerationOptions property MatchCasing. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+          <maml:para>EnumerationOptions property MatchCasing. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -236,7 +252,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>AttributesToSkip</maml:name>
         <maml:description>
-          <maml:para>EnumerationOptions property AttributesToSkip. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+          <maml:para>EnumerationOptions property AttributesToSkip. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
         <dev:type>
@@ -248,7 +264,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>MatchType</maml:name>
         <maml:description>
-          <maml:para>EnumerationOptions property MatchType. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+          <maml:para>EnumerationOptions property MatchType. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -260,7 +276,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Depth</maml:name>
         <maml:description>
-          <maml:para>EnumerationOptions property Depth. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+          <maml:para>EnumerationOptions property Depth. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -272,7 +288,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>ReturnSpecialDirectories</maml:name>
         <maml:description>
-          <maml:para>EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+          <maml:para>EnumerationOptions property ReturnSpecialDirectories. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -335,24 +351,24 @@
   </command:command>
   <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
     <command:details>
-      <command:name>Get-ItemSize</command:name>
-      <command:verb>Get</command:verb>
-      <command:noun>ItemSize</command:noun>
+      <command:name>Find-ItemContent</command:name>
+      <command:verb>Find</command:verb>
+      <command:noun>ItemContent</command:noun>
       <maml:description>
-        <maml:para>Simple and fast function for getting the size of any item on the filesystem (like du on linux/unix)</maml:para>
+        <maml:para>Simple and fast function for finding any given string (regex pattern) in files on the filesystem (like grep on linux/unix)</maml:para>
       </maml:description>
     </command:details>
     <maml:description>
-      <maml:para>Function that uses the EnumerateFiles, EnumerateDirectories, EnumerateFileSystemEntries method from the dotnet class System.Io.Directory to quickly find any item on the filesystem. Item could be a directory or a file or anything else. The it converts the found item to a FileInfo object and uses Measure-Object on the Length property to calculate the sum</maml:para>
+      <maml:para>Function that uses the EnumerateFiles method from the dotnet class System.Io.Directory to quickly find any file on the filesystem and will then search for the given pattern in any found file using System.IO.StreamReader with System.Regex.</maml:para>
       <maml:para>Class System.IO.EnumerationOptions does not exist in Powershell &lt; 6 (so this function is not supported in the normal PowerShell, only in PowerShell Core/7)</maml:para>
     </maml:description>
     <command:syntax>
       <command:syntaxItem>
-        <maml:name>Get-ItemSize</maml:name>
+        <maml:name>Find-ItemContent</maml:name>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
           <maml:name>Path</maml:name>
           <maml:description>
-            <maml:para>Root path to search objects for. Defaults to current working directory</maml:para>
+            <maml:para>Root path to search items for. Defaults to current working directory. The relative or absolute path to the directory to search. This string is not case-sensitive.</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
           <dev:type>
@@ -361,10 +377,24 @@
           </dev:type>
           <dev:defaultValue>$pwd</dev:defaultValue>
         </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+        <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+          <maml:name>Pattern</maml:name>
+          <maml:description>
+            <maml:para>string or regex pattern that will be used to find this pattern/string in the files found on the filesystem</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
           <maml:name>Name</maml:name>
           <maml:description>
-            <maml:para>(Default: '*' -&gt; all objects) One ore more strings to search for (f.e. ' .exe' OR ' .exe',' .log' OR 'foo .log')</maml:para>
+            <maml:para>(Default: '*') This is the searchPattern for the Enumeration class. The search string to match against the names of items in path. This parameter can contain a combination of valid literal and wildcard characters, but it doesn't support regular expressions. You can use the * (asterisk) to match zero or more characters in that position. You can also use the ? (question mark) to exactly match one character in that position.</maml:para>
+            <maml:para>Default is '*' = all items</maml:para>
+            <maml:para>One ore more strings to search for (f.e. ' .exe' OR ' .exe',' .log' OR 'foo .log')</maml:para>
           </maml:description>
           <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
           <dev:type>
@@ -372,18 +402,6 @@
             <maml:uri />
           </dev:type>
           <dev:defaultValue>*</dev:defaultValue>
-        </command:parameter>
-        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
-          <maml:name>Type</maml:name>
-          <maml:description>
-            <maml:para>(Default: All) Only search items of specific type: Directory, File or All</maml:para>
-          </maml:description>
-          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
-          <dev:type>
-            <maml:name>String</maml:name>
-            <maml:uri />
-          </dev:type>
-          <dev:defaultValue>All</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>Recurse</maml:name>
@@ -430,7 +448,7 @@
             <maml:name>String[]</maml:name>
             <maml:uri />
           </dev:type>
-          <dev:defaultValue>0</dev:defaultValue>
+          <dev:defaultValue>@('Hidden', 'System')</dev:defaultValue>
         </command:parameter>
         <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
           <maml:name>MatchType</maml:name>
@@ -460,6 +478,351 @@
           <maml:name>ReturnSpecialDirectories</maml:name>
           <maml:description>
             <maml:para>EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>RegexOptions</maml:name>
+          <maml:description>
+            <maml:para>RegexOptions. Check hhttps://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=net-7.0 for more information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>@('None')</dev:defaultValue>
+        </command:parameter>
+      </command:syntaxItem>
+    </command:syntax>
+    <command:parameters>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+        <maml:name>Path</maml:name>
+        <maml:description>
+          <maml:para>Root path to search items for. Defaults to current working directory. The relative or absolute path to the directory to search. This string is not case-sensitive.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>$pwd</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="true" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+        <maml:name>Pattern</maml:name>
+        <maml:description>
+          <maml:para>string or regex pattern that will be used to find this pattern/string in the files found on the filesystem</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="3" aliases="none">
+        <maml:name>Name</maml:name>
+        <maml:description>
+          <maml:para>(Default: '*') This is the searchPattern for the Enumeration class. The search string to match against the names of items in path. This parameter can contain a combination of valid literal and wildcard characters, but it doesn't support regular expressions. You can use the * (asterisk) to match zero or more characters in that position. You can also use the ? (question mark) to exactly match one character in that position.</maml:para>
+          <maml:para>Default is '*' = all items</maml:para>
+          <maml:para>One ore more strings to search for (f.e. ' .exe' OR ' .exe',' .log' OR 'foo .log')</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>*</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Recurse</maml:name>
+        <maml:description>
+          <maml:para>EnumerationOptions property RecurseSubdirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>IgnoreInaccessible</maml:name>
+        <maml:description>
+          <maml:para>EnumerationOptions property IgnoreInaccessible. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+        <dev:type>
+          <maml:name>Boolean</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>True</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MatchCasing</maml:name>
+        <maml:description>
+          <maml:para>EnumerationOptions property MatchCasing. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>PlatformDefault</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>AttributesToSkip</maml:name>
+        <maml:description>
+          <maml:para>EnumerationOptions property AttributesToSkip. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>@('Hidden', 'System')</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>MatchType</maml:name>
+        <maml:description>
+          <maml:para>EnumerationOptions property MatchType. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <dev:type>
+          <maml:name>String</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>Depth</maml:name>
+        <maml:description>
+          <maml:para>EnumerationOptions property Depth. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+        <dev:type>
+          <maml:name>Int32</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>0</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>ReturnSpecialDirectories</maml:name>
+        <maml:description>
+          <maml:para>EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
+        <dev:type>
+          <maml:name>SwitchParameter</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+        <maml:name>RegexOptions</maml:name>
+        <maml:description>
+          <maml:para>RegexOptions. Check hhttps://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=net-7.0 for more information.</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+        <dev:type>
+          <maml:name>String[]</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>@('None')</dev:defaultValue>
+      </command:parameter>
+    </command:parameters>
+    <command:inputTypes />
+    <command:returnValues>
+      <command:returnValue>
+        <dev:type>
+          <maml:name>System.String</maml:name>
+        </dev:type>
+        <maml:description>
+          <maml:para></maml:para>
+        </maml:description>
+      </command:returnValue>
+    </command:returnValues>
+    <maml:alertSet>
+      <maml:alert>
+        <maml:para>Author: Eizedev</maml:para>
+        <maml:para>Last Modified: Dez 30, 2022</maml:para>
+        <maml:para>Version: 1.0</maml:para>
+      </maml:alert>
+    </maml:alertSet>
+    <command:examples>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 1 --------------------------</maml:title>
+        <dev:code>Find-ItemContent -Path c:\windows -Pattern 'WindowsUpdate' -Name '*.log' -Recurse</dev:code>
+        <dev:remarks>
+          <maml:para>Using the alias psgrep. Search for pattern 'tinysvc' in all files in the current working directory recursively</maml:para>
+        </dev:remarks>
+      </command:example>
+      <command:example>
+        <maml:title>-------------------------- EXAMPLE 2 --------------------------</maml:title>
+        <dev:code>psgrep $pwd 'tinysvc' '*' -Recurse</dev:code>
+        <dev:remarks>
+          <maml:para>Search for pattern 'WindowsUpdate' in all .log files in c:\windows directory recursively</maml:para>
+        </dev:remarks>
+      </command:example>
+    </command:examples>
+    <command:relatedLinks>
+      <maml:navigationLink>
+        <maml:linkText>https://github.com/eizedev/PSItems</maml:linkText>
+        <maml:uri>https://github.com/eizedev/PSItems</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-7.0</maml:linkText>
+        <maml:uri>https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-7.0</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0</maml:linkText>
+        <maml:uri>https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0</maml:uri>
+      </maml:navigationLink>
+      <maml:navigationLink>
+        <maml:linkText>https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=net-7.0</maml:linkText>
+        <maml:uri>https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=net-7.0</maml:uri>
+      </maml:navigationLink>
+    </command:relatedLinks>
+  </command:command>
+  <command:command xmlns:maml="http://schemas.microsoft.com/maml/2004/10" xmlns:command="http://schemas.microsoft.com/maml/dev/command/2004/10" xmlns:dev="http://schemas.microsoft.com/maml/dev/2004/10" xmlns:MSHelp="http://msdn.microsoft.com/mshelp">
+    <command:details>
+      <command:name>Get-ItemSize</command:name>
+      <command:verb>Get</command:verb>
+      <command:noun>ItemSize</command:noun>
+      <maml:description>
+        <maml:para>Simple and fast function for getting the size of any item on the filesystem (like du on linux/unix)</maml:para>
+      </maml:description>
+    </command:details>
+    <maml:description>
+      <maml:para>Function that uses the EnumerateFiles, EnumerateDirectories, EnumerateFileSystemEntries method from the dotnet class System.Io.Directory to quickly find any item on the filesystem. Item could be a directory or a file or anything else. The it converts the found item to a FileInfo object and uses Measure-Object on the Length property to calculate the sum</maml:para>
+      <maml:para>Class System.IO.EnumerationOptions does not exist in Powershell &lt; 6 (so this function is not supported in the normal PowerShell, only in PowerShell Core/7)</maml:para>
+    </maml:description>
+    <command:syntax>
+      <command:syntaxItem>
+        <maml:name>Get-ItemSize</maml:name>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
+          <maml:name>Path</maml:name>
+          <maml:description>
+            <maml:para>Root path to search items for. Defaults to current working directory. The relative or absolute path to the directory to search. This string is not case-sensitive.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>$pwd</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
+          <maml:name>Name</maml:name>
+          <maml:description>
+            <maml:para>This is the searchPattern for the Enumeration class. The search string to match against the names of items in path. This parameter can contain a combination of valid literal and wildcard characters, but it doesn't support regular expressions. You can use the * (asterisk) to match zero or more characters in that position. You can also use the ? (question mark) to exactly match one character in that position.</maml:para>
+            <maml:para>Default is `'*'` = all items</maml:para>
+            <maml:para>Characters other than the wildcard are literal characters. For example, the searchPattern string " t" searches for all names in path ending with the letter "t". The searchPattern string "s " searches for all names in path beginning with the letter "s".</maml:para>
+            <maml:para>One ore more strings to search for (f.e. ' .exe' OR ' .exe',' .log' OR 'foo .log')</maml:para>
+            <maml:para>When you use the asterisk wildcard character in a searchPattern such as "*.txt", the number of characters in the specified extension affects the search as follows:</maml:para>
+            <maml:para>- If the specified extension is exactly three characters long, the method returns files with extensions that begin with the specified extension. For example, "*.xls" returns both "book.xls" and "book.xlsx".</maml:para>
+            <maml:para>- In all other cases, the method returns files that exactly match the specified extension. For example, "*.ai" returns "file.ai" but not "file.aif".</maml:para>
+            <maml:para></maml:para>
+            <maml:para>When you use the question mark wildcard character, this method returns only files that match the specified file extension. For example, given two files, "file1.txt" and "file1.txtother", in a directory, a search pattern of "file?.txt" returns just the first file, whereas a search pattern of "file*.txt" returns both files.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>*</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Type</maml:name>
+          <maml:description>
+            <maml:para>(Default: All) Only search items of specific type: Directory, File or All</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>All</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Recurse</maml:name>
+          <maml:description>
+            <maml:para>EnumerationOptions property RecurseSubdirectories. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
+          </maml:description>
+          <dev:type>
+            <maml:name>SwitchParameter</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>False</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>IgnoreInaccessible</maml:name>
+          <maml:description>
+            <maml:para>EnumerationOptions property IgnoreInaccessible. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
+          <dev:type>
+            <maml:name>Boolean</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>True</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MatchCasing</maml:name>
+          <maml:description>
+            <maml:para>EnumerationOptions property MatchCasing. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>PlatformDefault</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>AttributesToSkip</maml:name>
+          <maml:description>
+            <maml:para>EnumerationOptions property AttributesToSkip. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
+          <dev:type>
+            <maml:name>String[]</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>0</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>MatchType</maml:name>
+          <maml:description>
+            <maml:para>EnumerationOptions property MatchType. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <dev:type>
+            <maml:name>String</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>Depth</maml:name>
+          <maml:description>
+            <maml:para>EnumerationOptions property Depth. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
+          <dev:type>
+            <maml:name>Int32</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>0</dev:defaultValue>
+        </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
+          <maml:name>ReturnSpecialDirectories</maml:name>
+          <maml:description>
+            <maml:para>EnumerationOptions property ReturnSpecialDirectories. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
           </maml:description>
           <dev:type>
             <maml:name>SwitchParameter</maml:name>
@@ -519,7 +882,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
         <maml:name>Path</maml:name>
         <maml:description>
-          <maml:para>Root path to search objects for. Defaults to current working directory</maml:para>
+          <maml:para>Root path to search items for. Defaults to current working directory. The relative or absolute path to the directory to search. This string is not case-sensitive.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -531,7 +894,15 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="2" aliases="none">
         <maml:name>Name</maml:name>
         <maml:description>
-          <maml:para>(Default: '*' -&gt; all objects) One ore more strings to search for (f.e. ' .exe' OR ' .exe',' .log' OR 'foo .log')</maml:para>
+          <maml:para>This is the searchPattern for the Enumeration class. The search string to match against the names of items in path. This parameter can contain a combination of valid literal and wildcard characters, but it doesn't support regular expressions. You can use the * (asterisk) to match zero or more characters in that position. You can also use the ? (question mark) to exactly match one character in that position.</maml:para>
+          <maml:para>Default is `'*'` = all items</maml:para>
+          <maml:para>Characters other than the wildcard are literal characters. For example, the searchPattern string " t" searches for all names in path ending with the letter "t". The searchPattern string "s " searches for all names in path beginning with the letter "s".</maml:para>
+          <maml:para>One ore more strings to search for (f.e. ' .exe' OR ' .exe',' .log' OR 'foo .log')</maml:para>
+          <maml:para>When you use the asterisk wildcard character in a searchPattern such as "*.txt", the number of characters in the specified extension affects the search as follows:</maml:para>
+          <maml:para>- If the specified extension is exactly three characters long, the method returns files with extensions that begin with the specified extension. For example, "*.xls" returns both "book.xls" and "book.xlsx".</maml:para>
+          <maml:para>- In all other cases, the method returns files that exactly match the specified extension. For example, "*.ai" returns "file.ai" but not "file.aif".</maml:para>
+          <maml:para></maml:para>
+          <maml:para>When you use the question mark wildcard character, this method returns only files that match the specified file extension. For example, given two files, "file1.txt" and "file1.txtother", in a directory, a search pattern of "file?.txt" returns just the first file, whereas a search pattern of "file*.txt" returns both files.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
         <dev:type>
@@ -555,7 +926,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Recurse</maml:name>
         <maml:description>
-          <maml:para>EnumerationOptions property RecurseSubdirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+          <maml:para>EnumerationOptions property RecurseSubdirectories. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
@@ -567,7 +938,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>IgnoreInaccessible</maml:name>
         <maml:description>
-          <maml:para>EnumerationOptions property IgnoreInaccessible. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+          <maml:para>EnumerationOptions property IgnoreInaccessible. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">Boolean</command:parameterValue>
         <dev:type>
@@ -579,7 +950,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>MatchCasing</maml:name>
         <maml:description>
-          <maml:para>EnumerationOptions property MatchCasing. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+          <maml:para>EnumerationOptions property MatchCasing. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -591,7 +962,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>AttributesToSkip</maml:name>
         <maml:description>
-          <maml:para>EnumerationOptions property AttributesToSkip. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+          <maml:para>EnumerationOptions property AttributesToSkip. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String[]</command:parameterValue>
         <dev:type>
@@ -603,7 +974,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>MatchType</maml:name>
         <maml:description>
-          <maml:para>EnumerationOptions property MatchType. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+          <maml:para>EnumerationOptions property MatchType. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
         <dev:type>
@@ -615,7 +986,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>Depth</maml:name>
         <maml:description>
-          <maml:para>EnumerationOptions property Depth. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+          <maml:para>EnumerationOptions property Depth. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
         </maml:description>
         <command:parameterValue required="true" variableLength="false">Int32</command:parameterValue>
         <dev:type>
@@ -627,7 +998,7 @@
       <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="none">
         <maml:name>ReturnSpecialDirectories</maml:name>
         <maml:description>
-          <maml:para>EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.</maml:para>
+          <maml:para>EnumerationOptions property ReturnSpecialDirectories. Check &lt;https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0&gt; for more information.</maml:para>
         </maml:description>
         <command:parameterValue required="false" variableLength="false">SwitchParameter</command:parameterValue>
         <dev:type>
