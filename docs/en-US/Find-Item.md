@@ -1,13 +1,14 @@
 ---
 external help file: PSItems-help.xml
 Module Name: PSItems
-online version: https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-6.0
+online version: https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-7.0
 schema: 2.0.0
 ---
 
 # Find-Item
 
 ## SYNOPSIS
+
 Simple and fast function for finding any item on the filesystem (like find on linux/unix)
 
 ## SYNTAX
@@ -19,6 +20,7 @@ Find-Item [[-Path] <String>] [[-Name] <String[]>] [-Type <String>] [-Recurse] [-
 ```
 
 ## DESCRIPTION
+
 Function that uses the EnumerateFiles, EnumerateDirectories, EnumerateFileSystemEntries method from the dotnet class System.Io.Directory to quickly find any item on the filesystem
 Item could be a directory or a file or anything else
 
@@ -27,6 +29,7 @@ Class System.IO.EnumerationOptions does not exist in Powershell \< 6 (so this fu
 ## EXAMPLES
 
 ### EXAMPLE 1
+
 ```
 Find-Item -Path c:\windows -Name '*.exe' -As FileInfo
 ```
@@ -34,6 +37,7 @@ Find-Item -Path c:\windows -Name '*.exe' -As FileInfo
 Find all items with file format exe in c:\windows without subdirectory and return each file as FileSystemInfo object
 
 ### EXAMPLE 2
+
 ```
 search
 ```
@@ -44,6 +48,7 @@ returns all items (files + directories) with full path in current folder
 ## PARAMETERS
 
 ### -Path
+
 Root path to search items for.
 Defaults to current working directory.
 The relative or absolute path to the directory to search. This string is not case-sensitive.
@@ -61,6 +66,7 @@ Accept wildcard characters: False
 ```
 
 ### -Name
+
 This is the searchPattern for the Enumeration class.
 The search string to match against the names of items in path.
 This parameter can contain a combination of valid literal and wildcard characters,
@@ -96,6 +102,7 @@ Accept wildcard characters: False
 ```
 
 ### -Type
+
 Only search items of specific type: Directory, File or All
 
 ```yaml
@@ -111,8 +118,9 @@ Accept wildcard characters: False
 ```
 
 ### -Recurse
+
 EnumerationOptions property RecurseSubdirectories.
-Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
 
 ```yaml
 Type: SwitchParameter
@@ -127,8 +135,9 @@ Accept wildcard characters: False
 ```
 
 ### -IgnoreInaccessible
+
 EnumerationOptions property IgnoreInaccessible.
-Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
 
 ```yaml
 Type: Boolean
@@ -143,6 +152,7 @@ Accept wildcard characters: False
 ```
 
 ### -As
+
 Could be String or FileInfo.
 OutputType of found items will be an array of strings or an array of FileSystemInfo Objects.
 
@@ -159,8 +169,9 @@ Accept wildcard characters: False
 ```
 
 ### -MatchCasing
+
 EnumerationOptions property MatchCasing.
-Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
 
 ```yaml
 Type: String
@@ -175,8 +186,9 @@ Accept wildcard characters: False
 ```
 
 ### -AttributesToSkip
+
 EnumerationOptions property AttributesToSkip.
-Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
 
 ```yaml
 Type: String[]
@@ -191,8 +203,9 @@ Accept wildcard characters: False
 ```
 
 ### -MatchType
+
 EnumerationOptions property MatchType.
-Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
 
 ```yaml
 Type: String
@@ -207,8 +220,9 @@ Accept wildcard characters: False
 ```
 
 ### -Depth
+
 EnumerationOptions property Depth.
-Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
 
 ```yaml
 Type: Int32
@@ -223,8 +237,9 @@ Accept wildcard characters: False
 ```
 
 ### -ReturnSpecialDirectories
+
 EnumerationOptions property ReturnSpecialDirectories.
-Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
 
 ```yaml
 Type: SwitchParameter
@@ -246,15 +261,17 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## OUTPUTS
 
 ### System.String
+
 ### System.IO.FileSystemInfo
+
 ## NOTES
+
 Author: Eizedev
 Last Modified: Jul 13, 2022
 Version: 1.1
 
 ## RELATED LINKS
 
-[https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-6.0](https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-6.0)
+[https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-7.0](https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-7.0)
 
-[https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0](https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0)
-
+[https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0](https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0)
