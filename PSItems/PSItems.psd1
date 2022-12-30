@@ -12,7 +12,7 @@
     RootModule        = 'PSItems.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.2.4'
+    ModuleVersion     = '0.3.0'
 
     # Supported PSEditions
     # CompatiblePSEditions = @('Core')
@@ -69,7 +69,7 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @('Find-Item', 'Get-ItemSize')
+    FunctionsToExport = @('Find-Item', 'Get-ItemSize', 'Find-ItemContent')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
     CmdletsToExport   = '*'
@@ -78,7 +78,7 @@
     VariablesToExport = '*'
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport   = @('search','size')
+    AliasesToExport   = @('search', 'size', 'psgrep', 'look')
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
@@ -95,7 +95,7 @@
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags         = @('Get-ChildItem', 'FileManagement', 'find', 'search', 'du', 'Find-File', 'size', 'pwsh', 'directory', 'item', 'items' )
+            Tags         = @('Get-ChildItem', 'FileManagement', 'find', 'search', 'du', 'Find-File', 'size', 'pwsh', 'directory', 'item', 'grep' )
 
             # A URL to the license for this module.
             LicenseUri   = 'https://github.com/eizedev/PSItems/blob/master/LICENSE'
