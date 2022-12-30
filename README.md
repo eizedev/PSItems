@@ -6,7 +6,7 @@
 
 ---
 
-A PowerShell module that finds files and directories as well as file and directory information the quick and easy way!
+A PowerShell module that finds files and directories as well as file content and file and directory information the quick and easy way!
 
 ![Logo](res/logo.png)
 
@@ -48,7 +48,7 @@ Therefore, for example, the function is called `Find-Item` and not `Find-File`, 
 > ``📝`` This module is currently under construction and therefore in BETA. The already integrated functions work basically but can still have errors.
 
 - Tests
-  - Add Pester Tests for `Get-ItemSize` and `Find-Item`
+  - Add Pester Tests for `Get-ItemSize` and `Find-Item` and `Find-ItemContent`
     - [ ] Windows
       - in progress
     - [ ] Linux
@@ -58,6 +58,7 @@ Therefore, for example, the function is called `Find-Item` and not `Find-File`, 
   - Update documentation for functions with more, detailed examples
     - [ ] `Find-Item`
     - [ ] `Get-ItemSize`
+    - [ ] `Find-ItemContent`
 - Security
   - Add code scanning using github workflow
 - New functions and features
@@ -80,6 +81,7 @@ The usage and a few examples can be found in the [documentation folder](docs/en-
 | ------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
 | [Find-Item](PSItems/Public/Find-Item.ps1)       | Simple and fast function for finding any item on the filesystem (like find on linux/unix)           | [Find-Item](docs/en-US/Find-Item.md)       |
 | [Get-ItemSize](PSItems/Public/Get-ItemSize.ps1) | Simple and fast function for getting the size of any item on the filesystem (like du on linux/unix) | [Get-ItemSize](docs/en-US/Get-ItemSize.md) |
+| [Find-ItemContent](PSItems/Public/Find-ItemContent.ps1) | Simple and fast function for finding any given string (regex pattern) in files on the filesystem (like grep on linux/unix) | [Find-ItemContent](docs/en-US/Find-ItemContent.md) |
 
 ---
 
