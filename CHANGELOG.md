@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.0]
+
+- Added new function `Find-ItemContent` with aliases `psgrep` and `look` as a fast alternative for linux/unix grep
+
 ## [0.2.4]
 
 - Updated module manifest to include Functions/Aliases to export (This will support auto loading of the functions during pwsh start)
