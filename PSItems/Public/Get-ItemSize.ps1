@@ -32,28 +32,28 @@ function Get-ItemSize {
     (Default: All) Only search items of specific type: Directory, File or All
 
     .PARAMETER Recurse
-    EnumerationOptions property RecurseSubdirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property RecurseSubdirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER IgnoreInaccessible
-    EnumerationOptions property IgnoreInaccessible. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property IgnoreInaccessible. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER MatchCasing
-    EnumerationOptions property MatchCasing. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property MatchCasing. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER AttributesToSkip
-    EnumerationOptions property AttributesToSkip. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property AttributesToSkip. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER MatchType
-    EnumerationOptions property MatchType. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property MatchType. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER MaxRecursionDepth
-    EnumerationOptions property MatchType. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property MatchType. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER Depth
-    EnumerationOptions property Depth. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property Depth. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER ReturnSpecialDirectories
-    EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER Format
     Format (ByteSize) in which the size will be calculated and returned (KB, MB, TB, PB)
@@ -86,10 +86,10 @@ function Get-ItemSize {
     https://github.com/eizedev/PSItems
 
     .LINK
-    https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-6.0
+    https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-7.0
 
     .LINK
-    https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0
+    https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0
 
     .NOTES
     Author: Eizedev
@@ -177,7 +177,7 @@ function Get-ItemSize {
     # Input Validation
     if ($Type -eq 'Directory') { Write-Warning 'Directories are only containers and will not have any size (length) at all. Specify -Type File or -Type All instead' }
 
-    # Check https://docs.microsoft.com/de-de/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information and implementations
+    # Check https://docs.microsoft.com/de-de/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information and implementations
     $EnumerationOptions = [System.IO.EnumerationOptions]::new()
     $EnumerationOptions.IgnoreInaccessible = $IgnoreInaccessible
     $EnumerationOptions.RecurseSubdirectories = $Recurse.IsPresent

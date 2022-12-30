@@ -32,32 +32,32 @@
     Only search items of specific type: Directory, File or All
 
     .PARAMETER Recurse
-    EnumerationOptions property RecurseSubdirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property RecurseSubdirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER IgnoreInaccessible
-    EnumerationOptions property IgnoreInaccessible. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property IgnoreInaccessible. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER As
     Could be String or FileInfo.
     OutputType of found items will be an array of strings or an array of FileSystemInfo Objects.
 
     .PARAMETER MatchCasing
-    EnumerationOptions property MatchCasing. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property MatchCasing. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER AttributesToSkip
-    EnumerationOptions property AttributesToSkip. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property AttributesToSkip. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER MatchType
-    EnumerationOptions property MatchType. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property MatchType. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER MaxRecursionDepth
-    EnumerationOptions property MatchType. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property MatchType. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER Depth
-    EnumerationOptions property Depth. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property Depth. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER ReturnSpecialDirectories
-    EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information.
+    EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .EXAMPLE
     PS C:\> Find-Item -Path c:\windows -Name '*.exe' -As FileInfo
@@ -73,10 +73,10 @@
     https://github.com/eizedev/PSItems
 
     .LINK
-    https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-6.0
+    https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-7.0
 
     .LINK
-    https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-6.0
+    https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0
 
     .NOTES
     Author: Eizedev
@@ -143,7 +143,7 @@
         $ReturnSpecialDirectories
     )
 
-    # Check https://docs.microsoft.com/de-de/dotnet/api/system.io.enumerationoptions?view=net-6.0 for more information and implementations
+    # Check https://docs.microsoft.com/de-de/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information and implementations
     $EnumerationOptions = [System.IO.EnumerationOptions]::new()
     $EnumerationOptions.IgnoreInaccessible = $IgnoreInaccessible
     $EnumerationOptions.RecurseSubdirectories = $Recurse.IsPresent
