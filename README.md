@@ -96,13 +96,13 @@ Get-Command -Module PSItems -CommandType All
 ```pwsh
 CommandType     Name                                               Version    Source
 -----------     ----                                               -------    ------
-Alias           ff -> Find-Item                                    0.2.3      PSItems
-Alias           fi -> Find-Item                                    0.2.3      PSItems
-Alias           gis -> Get-ItemSize                                0.2.3      PSItems
-Alias           search -> Find-Item                                0.2.3      PSItems
-Alias           size -> Get-ItemSize                               0.2.3      PSItems
-Function        Find-Item                                          0.2.3      PSItems
-Function        Get-ItemSize                                       0.2.3      PSItems
+Alias           look -> Find-ItemContent                           0.3.0      PSItems
+Alias           psgrep -> Find-ItemContent                         0.3.0      PSItems
+Alias           search -> Find-Item                                0.3.0      PSItems
+Alias           size -> Get-ItemSize                               0.3.0      PSItems
+Function        Find-Item                                          0.3.0      PSItems
+Function        Find-ItemContent                                   0.3.0      PSItems
+Function        Get-ItemSize                                       0.3.0      PSItems
 ```
 
 ---
