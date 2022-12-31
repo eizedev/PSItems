@@ -179,5 +179,3 @@
 }
 
 Set-Alias -Name psgrep -Value Find-ItemContent -Force
-Set-Alias -Name look -Value Find-ItemContent -Force
-Set-Alias -Name hunt -Value Find-ItemContent -Force

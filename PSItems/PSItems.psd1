@@ -12,7 +12,7 @@
     RootModule        = 'PSItems.psm1'
 
     # Version number of this module.
-    ModuleVersion     = '0.3.0'
+    ModuleVersion     = '0.3.1'
 
     # Supported PSEditions
     # CompatiblePSEditions = @('Core')
@@ -30,7 +30,7 @@
     Copyright         = '(c) Eizedev. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description       = 'A PowerShell module that finds files and directories as well as file and directory information the quick and easy way!'
+    Description       = 'A PowerShell module that finds files, file content and directories as well as file and directory information the quick and easy way!'
 
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion = '7.0.0'
@@ -78,7 +78,7 @@
     VariablesToExport = '*'
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport   = @('search', 'size', 'psgrep', 'look')
+    AliasesToExport   = @('search', 'size', 'psgrep', 'psfind', 'pssize')
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()

@@ -28,6 +28,12 @@ A PowerShell module that finds files and directories as well as file content and
 
 ## Overview
 
+| PowerShell                                            | Linux/Unix                                                                                         |    Description                               |
+| ------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| `psfind` -> Find-Item       | `find`        | `psfind` is similiar to linux/unix `find` command       |
+| `psgrep` -> Find-ItemContent  | `grep` | `psgrep` is similiar to linux/unix `grep` command |
+| `pssize` -> Get-ItemSize  | `du` | `pssize` is similiar to linux/unix `du` command |
+
 > ``📝`` The functions of the module do not run with Windows PowerShell, they require at least PowerShell > 6.0 or a newer version. The [latest, stable PowerShell version](https://github.com/PowerShell/PowerShell/releases) is always recommended
 
 As a person who works a lot with Linux distributions and had not found a way on Windows to find files or folders or their information in a FAST way, I developed this module or functions.
@@ -96,13 +102,14 @@ Get-Command -Module PSItems -CommandType All
 ```pwsh
 CommandType     Name                                               Version    Source
 -----------     ----                                               -------    ------
-Alias           look -> Find-ItemContent                           0.3.0      PSItems
-Alias           psgrep -> Find-ItemContent                         0.3.0      PSItems
-Alias           search -> Find-Item                                0.3.0      PSItems
-Alias           size -> Get-ItemSize                               0.3.0      PSItems
-Function        Find-Item                                          0.3.0      PSItems
-Function        Find-ItemContent                                   0.3.0      PSItems
-Function        Get-ItemSize                                       0.3.0      PSItems
+Alias           psfind -> Find-Item                                0.3.1      PSItems
+Alias           psgrep -> Find-ItemContent                         0.3.1      PSItems
+Alias           pssize -> Get-ItemSize                             0.3.1      PSItems
+Alias           search -> Find-Item                                0.3.1      PSItems
+Alias           size -> Get-ItemSize                               0.3.1      PSItems
+Function        Find-Item                                          0.3.1      PSItems
+Function        Find-ItemContent                                   0.3.1      PSItems
+Function        Get-ItemSize                                       0.3.1      PSItems
 ```
 
 ---

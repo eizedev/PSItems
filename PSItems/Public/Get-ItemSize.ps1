@@ -234,5 +234,6 @@ function Get-ItemSize {
     }
 }
 
+Set-Alias -Name pssize -Value Get-ItemSize -Force
 Set-Alias -Name gis -Value Get-ItemSize -Force
 Set-Alias -Name size -Value Get-ItemSize -Force

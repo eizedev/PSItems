@@ -173,6 +173,7 @@
     }
 }
 
+Set-Alias -Name psfind -Value Find-Item -Force
 Set-Alias -Name ff -Value Find-Item -Force
 Set-Alias -Name fi -Value Find-Item -Force
 Set-Alias -Name search -Value Find-Item -Force
