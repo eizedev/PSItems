@@ -63,6 +63,10 @@
 
     Search for pattern 'WindowsUpdate' in all .log files in c:\windows directory recursively
 
+    .EXAMPLE
+    PS C:\> psgrep 'test'
+
+    Shortest possible command line call. Searching for 'test' in (-Path) the current directory and -Name will be '*' (all files in current directory)
     .LINK
     https://github.com/eizedev/PSItems
 
@@ -89,14 +93,14 @@
     [CmdletBinding()]
     [OutputType('System.String')]
     param (
-        # Path to search for files
-        [Parameter(Mandatory = $false, Position = 0)]
-        [string]
-        $Path = $pwd,
         # Pattern for searching for in files
-        [Parameter(Mandatory = $true, Position = 1)]
+        [Parameter(Mandatory = $true, Position = 0)]
         [string]
         $Pattern,
+        # Path to search for files
+        [Parameter(Mandatory = $false, Position = 1)]
+        [string]
+        $Path = $pwd,
         # Name for searching for files
         [Parameter(Mandatory = $false, Position = 2)]
         [string[]]
