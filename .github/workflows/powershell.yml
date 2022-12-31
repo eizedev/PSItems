@@ -31,7 +31,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Run PSScriptAnalyzer
-        uses: microsoft/psscriptanalyzer-action@452b6222221f82be3420596e9bd148a7b2bb5bb8
+        uses: microsoft/psscriptanalyzer-action@v1.1
         with:
           # Check https://github.com/microsoft/action-psscriptanalyzer for more info about the options.
           path: .\
