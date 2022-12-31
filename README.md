@@ -28,11 +28,17 @@ A PowerShell module that finds files and directories as well as file content and
 
 ## Overview
 
-| PowerShell                                            | Linux/Unix                                                                                         |    Description                               |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
+| PowerShell  | Linux/Unix    |    Description   |
+| --------------------------| --------------------- | ------------------------|
 | `psfind` -> Find-Item       | `find`        | `psfind` is similiar to linux/unix `find` command       |
 | `psgrep` -> Find-ItemContent  | `grep` | `psgrep` is similiar to linux/unix `grep` command |
 | `pssize` -> Get-ItemSize  | `du` | `pssize` is similiar to linux/unix `du` command |
+
+| CmdLet  | Command    |    Description   |
+| --------------------------| --------------------- | ------------------------|
+| `psfind`       | `psfind`       | Without parameter psfind returns all items (files, junctions, directories...) with full path in current directory     |
+| `pssize`  | `pssize` | `Without parameter psfind rUses all items (files, junctions, directories...) in current directory and return size in MB |
+| `psgrep`  | `psgrep 'test'` | returns all files where `'test'` was found in format `filename: line` in the current directory |
 
 > ``📝`` The functions of the module do not run with Windows PowerShell, they require at least PowerShell > 6.0 or a newer version. The [latest, stable PowerShell version](https://github.com/PowerShell/PowerShell/releases) is always recommended
 
