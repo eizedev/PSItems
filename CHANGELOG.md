@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.2]
+
+- The parameter order for `psgrep` has been changed so that specifying the parameter name -Pattern is no longer mandatory, since it is now the first parameter
+
 ## [0.3.1]
 
 - Removed alias `look` of function `Find-ItemContent` as it correlates with the linux/unix command look
