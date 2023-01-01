@@ -56,7 +56,7 @@
     .PARAMETER Depth
     EnumerationOptions property Depth. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
-    .PARAMETER ReturnSpecialDirectories
+    .PARAMETER IncludeSpecialDirectories
     EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .EXAMPLE
@@ -140,7 +140,7 @@
         # if given, return the special directory entries "." and ".."; otherwise, false
         [Parameter(Mandatory = $false)]
         [switch]
-        $ReturnSpecialDirectories
+        $IncludeSpecialDirectories
     )
 
     # Check https://docs.microsoft.com/de-de/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information and implementations
@@ -151,7 +151,7 @@
     $EnumerationOptions.AttributesToSkip = $AttributesToSkip
     if ($PSBoundParameters.ContainsKey('MatchType')) { $EnumerationOptions.MaxRecursionDepth = $MatchType }
     if ($PSBoundParameters.ContainsKey('Depth')) { $EnumerationOptions.MaxRecursionDepth = $Depth; $EnumerationOptions.RecurseSubdirectories = $true }
-    $EnumerationOptions.ReturnSpecialDirectories = $ReturnSpecialDirectories.IsPresent
+    $EnumerationOptions.ReturnSpecialDirectories = $IncludeSpecialDirectories.IsPresent
 
     # Use specific method of class System.IO.Directory
     switch ($Type) {

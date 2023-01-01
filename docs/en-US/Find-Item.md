@@ -16,7 +16,7 @@ Simple and fast function for finding any item on the filesystem (like find on li
 ```
 Find-Item [[-Path] <String>] [[-Name] <String[]>] [-Type <String>] [-Recurse] [-IgnoreInaccessible <Boolean>]
  [-As <String>] [-MatchCasing <String>] [-AttributesToSkip <String[]>] [-MatchType <String>] [-Depth <Int32>]
- [-ReturnSpecialDirectories] [<CommonParameters>]
+ [-IncludeSpecialDirectories] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -236,10 +236,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ReturnSpecialDirectories
-
-EnumerationOptions property ReturnSpecialDirectories.
-Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
+### -IncludeSpecialDirectories
+EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
 ```yaml
 Type: SwitchParameter
