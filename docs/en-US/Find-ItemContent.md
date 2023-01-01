@@ -16,7 +16,8 @@ Simple and fast function for finding any given string (regex pattern) in files o
 ```
 Find-ItemContent [-Pattern] <String> [[-Path] <String>] [[-Name] <String[]>] [-Recurse]
  [-IgnoreInaccessible <Boolean>] [-MatchCasing <String>] [-AttributesToSkip <String[]>] [-MatchType <String>]
- [-Depth <Int32>] [-IncludeSpecialDirectories] [-Options <String[]>] [-Highlight] [<CommonParameters>]
+ [-Depth <Int32>] [-IncludeSpecialDirectories] [-Options <String[]>] [-Highlight] [-NotMatch]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -76,6 +77,22 @@ psgrep 'measure' -H -R -O IgnoreCase
 ```
 
 Equivalent to linux/unix grep: grep -HiR 'measure'
+
+### EXAMPLE 7
+
+```
+psgrep 'output' -Name 'CHANGELOG.md'
+```
+
+Searches for pattern 'output' in file 'CHANGELOG.md' in current directory
+
+### EXAMPLE 8
+
+```
+psgrep 'output' -Name 'CHANGELOG.md' -Not
+```
+
+Negates above search. Searches for pattern 'output' in file 'CHANGELOG.md' in current directory and outputs all lines that are not match to this pattern.
 
 ## PARAMETERS
 
@@ -279,6 +296,22 @@ Accept wildcard characters: False
 ### -Highlight
 
 Using Microsoft.PowerShell.Commands.MatchInfo class (Select-String) to pre filtered highlight output
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -NotMatch
+
+negates the matched pattern, so, show all results if pattern not matches
 
 ```yaml
 Type: SwitchParameter

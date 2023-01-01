@@ -58,6 +58,10 @@
     Direct usage of MatchInfo class is not possible since i also want to output the file where the pattern was found.
     So we first use Regex class to find the pattern in a fast way and then use Select-String to output all as MatchInfo type to highlight the pattern.
 
+    .PARAMETER NotMatch
+    negates the matched pattern, so, show all results if pattern not matches.
+    Currently, pipelining is not supported (yet). Therefore we would need an InputObject parameter that accepts pipeline input and need to bypass the Enumeration of filesystem objects
+
     .EXAMPLE
     PS C:\> Find-ItemContent -Path c:\windows -Pattern 'WindowsUpdate' -Name '*.log' -Recurse
 
@@ -87,6 +91,16 @@
     PS C:\> psgrep 'measure' -H -R -O IgnoreCase
 
     Equivalent to linux/unix grep: grep -HiR 'measure'
+
+    .EXAMPLE
+    PS C:\> psgrep 'output' -Name 'CHANGELOG.md'
+
+    Searches for pattern 'output' in file 'CHANGELOG.md' in current directory
+
+    .EXAMPLE
+    PS C:\> psgrep 'output' -Name 'CHANGELOG.md' -Not
+
+    Negates above search. Searches for pattern 'output' in file 'CHANGELOG.md' in current directory and outputs all lines that are not match to this pattern.
     .LINK
     https://github.com/eizedev/PSItems
 
@@ -164,7 +178,11 @@
         # Using Microsoft.PowerShell.Commands.MatchInfo class (Select-String) to pre filtered highlight output
         [Parameter(Mandatory = $false)]
         [switch]
-        $Highlight
+        $Highlight,
+        # negates the matched pattern, so, show all results if pattern not matches
+        [Parameter(Mandatory = $false)]
+        [switch]
+        $NotMatch
     )
 
     # System.IO Enumeration Options
@@ -195,15 +213,20 @@
                 while ($reader.EndOfStream -eq $false) {
                     $line = $reader.ReadLine()
                     $match = [Regex]::Matches($line, $pattern, $Options)
-                    if (-Not [string]::IsNullOrEmpty($match)) {
-                        $Output = "$($file): $($line.Trim())"
-                        if ($Highlight.IsPresent) {
-                            if ($Options -match 'IgnoreCase') {
-                                $Output = Select-String -InputObject $Output -Pattern $Pattern -AllMatches
-                            } else {
-                                $Output = Select-String -InputObject $Output -Pattern $Pattern -AllMatches -CaseSensitive
+                    if (-Not $NotMatch) {
+                        if (-Not [string]::IsNullOrEmpty($match)) {
+                            $Output = "$($file): $($line.Trim())"
+                            if ($Highlight.IsPresent) {
+                                if ($Options -match 'IgnoreCase') {
+                                    $Output = Select-String -InputObject $Output -Pattern $Pattern -AllMatches
+                                } else {
+                                    $Output = Select-String -InputObject $Output -Pattern $Pattern -AllMatches -CaseSensitive
+                                }
                             }
+                            Write-Output $Output
                         }
+                    } elseif ([string]::IsNullOrEmpty($match)) {
+                        $Output = "$($file): $($line.Trim())"
                         Write-Output $Output
                     }
                 }
