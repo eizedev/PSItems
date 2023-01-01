@@ -53,6 +53,22 @@ psgrep 'test'
 
 Shortest possible command line call. Searching for 'test' in (-Path) the current directory and -Name will be '*' (all files in current directory)
 
+### EXAMPLE 4
+
+```
+psgrep 'test'
+```
+
+Same as above example but the pattern 'test' will be highlightet (-H/-Highlight) in the output
+
+### EXAMPLE 5
+
+```
+psgrep 'measure' -H -O IgnoreCase
+```
+
+Same as above (only with pattern 'measure') but it ignores casing (so it is not CaseSensitive). -O is the short version of -Options and -Options is an alias of -RegexOptions
+
 ## PARAMETERS
 
 ### -Pattern
@@ -245,7 +261,7 @@ Check h<https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressi
 ```yaml
 Type: String[]
 Parameter Sets: (All)
-Aliases:
+Aliases: Options
 
 Required: False
 Position: Named
@@ -255,6 +271,7 @@ Accept wildcard characters: False
 ```
 
 ### -Highlight
+
 Using Microsoft.PowerShell.Commands.MatchInfo class (Select-String) to pre filtered highlight output
 
 ```yaml
@@ -270,6 +287,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
+
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS

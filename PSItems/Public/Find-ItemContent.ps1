@@ -77,6 +77,11 @@
     PS C:\> psgrep 'test' -H
 
     Same as above example but the pattern 'test' will be highlightet (-H/-Highlight) in the output
+
+    .EXAMPLE
+    PS C:\> psgrep 'measure' -H -O IgnoreCase
+
+    Same as above (only with pattern 'measure') but it ignores casing (so it is not CaseSensitive). -O is the short version of -Options and -Options is an alias of -RegexOptions
     .LINK
     https://github.com/eizedev/PSItems
 
@@ -148,6 +153,7 @@
         $ReturnSpecialDirectories,
         # Regex Options, check https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=net-7.0
         [Parameter(Mandatory = $false)]
+        [Alias("Options")]
         [ValidateSet('None', 'Compiled', 'CultureInvariant', 'ECMAScript', 'ExplicitCapture', 'IgnoreCase', 'IgnorePatternWhitespace', 'Multiline', 'NonBacktracking', 'RightToLeft', 'Singleline')]
         [string[]]
         $RegexOptions = @('None'),
@@ -188,7 +194,11 @@
                     if (-Not [string]::IsNullOrEmpty($match)) {
                         $Output = "$($file): $($line.Trim())"
                         if ($Highlight.IsPresent) {
-                            $Output = Select-String -InputObject $Output -Pattern $Pattern -AllMatches
+                            if ($RegexOptions -match 'IgnoreCase') {
+                                $Output = Select-String -InputObject $Output -Pattern $Pattern -AllMatches
+                            } else {
+                                $Output = Select-String -InputObject $Output -Pattern $Pattern -AllMatches -CaseSensitive
+                            }
                         }
                         Write-Output $Output
                     }
