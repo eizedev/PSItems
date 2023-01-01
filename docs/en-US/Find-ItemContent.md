@@ -69,6 +69,14 @@ psgrep 'measure' -H -O IgnoreCase
 
 Same as above (only with pattern 'measure') but it ignores casing (so it is not CaseSensitive). -O is the short version of -Options and -Options is an alias of -RegexOptions
 
+### EXAMPLE 6
+
+```
+psgrep 'measure' -H -R -O IgnoreCase
+```
+
+Equivalent to linux/unix grep: grep -HiR 'measure'
+
 ## PARAMETERS
 
 ### -Pattern
@@ -237,7 +245,8 @@ Accept wildcard characters: False
 ```
 
 ### -IncludeSpecialDirectories
-EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
+
+EnumerationOptions property ReturnSpecialDirectories. Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
 
 ```yaml
 Type: SwitchParameter
@@ -252,7 +261,8 @@ Accept wildcard characters: False
 ```
 
 ### -Options
-RegexOptions. Check hhttps://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=net-7.0 for more information.
+
+RegexOptions. Check h<https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=net-7.0> for more information.
 
 ```yaml
 Type: String[]
@@ -283,6 +293,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
+
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
