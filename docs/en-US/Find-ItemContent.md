@@ -16,7 +16,7 @@ Simple and fast function for finding any given string (regex pattern) in files o
 ```
 Find-ItemContent [-Pattern] <String> [[-Path] <String>] [[-Name] <String[]>] [-Recurse]
  [-IgnoreInaccessible <Boolean>] [-MatchCasing <String>] [-AttributesToSkip <String[]>] [-MatchType <String>]
- [-Depth <Int32>] [-ReturnSpecialDirectories] [-RegexOptions <String[]>] [-Highlight] [<CommonParameters>]
+ [-Depth <Int32>] [-IncludeSpecialDirectories] [-Options <String[]>] [-Highlight] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -236,10 +236,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ReturnSpecialDirectories
-
-EnumerationOptions property ReturnSpecialDirectories.
-Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
+### -IncludeSpecialDirectories
+EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
 ```yaml
 Type: SwitchParameter
@@ -253,15 +251,13 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -RegexOptions
-
-RegexOptions.
-Check h<https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=net-7.0> for more information.
+### -Options
+RegexOptions. Check hhttps://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=net-7.0 for more information.
 
 ```yaml
 Type: String[]
 Parameter Sets: (All)
-Aliases: Options
+Aliases:
 
 Required: False
 Position: Named
@@ -287,7 +283,6 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
-
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS

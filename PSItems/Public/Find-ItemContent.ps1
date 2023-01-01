@@ -47,10 +47,10 @@
     .PARAMETER Depth
     EnumerationOptions property Depth. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
-    .PARAMETER ReturnSpecialDirectories
+    .PARAMETER IncludeSpecialDirectories
     EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
-    .PARAMETER RegexOptions
+    .PARAMETER Options
     RegexOptions. Check hhttps://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=net-7.0 for more information.
 
     .PARAMETER Highlight
@@ -82,6 +82,11 @@
     PS C:\> psgrep 'measure' -H -O IgnoreCase
 
     Same as above (only with pattern 'measure') but it ignores casing (so it is not CaseSensitive). -O is the short version of -Options and -Options is an alias of -RegexOptions
+
+    .EXAMPLE
+    PS C:\> psgrep 'measure' -H -R -O IgnoreCase
+
+    Equivalent to linux/unix grep: grep -HiR 'measure'
     .LINK
     https://github.com/eizedev/PSItems
 
@@ -150,13 +155,12 @@
         # if given, return the special directory entries "." and ".."; otherwise, false
         [Parameter(Mandatory = $false)]
         [switch]
-        $ReturnSpecialDirectories,
+        $IncludeSpecialDirectories,
         # Regex Options, check https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=net-7.0
         [Parameter(Mandatory = $false)]
-        [Alias("Options")]
         [ValidateSet('None', 'Compiled', 'CultureInvariant', 'ECMAScript', 'ExplicitCapture', 'IgnoreCase', 'IgnorePatternWhitespace', 'Multiline', 'NonBacktracking', 'RightToLeft', 'Singleline')]
         [string[]]
-        $RegexOptions = @('None'),
+        $Options = @('None'),
         # Using Microsoft.PowerShell.Commands.MatchInfo class (Select-String) to pre filtered highlight output
         [Parameter(Mandatory = $false)]
         [switch]
@@ -172,14 +176,14 @@
     $EnumerationOptions.AttributesToSkip = $AttributesToSkip
     if ($PSBoundParameters.ContainsKey('MatchType')) { $EnumerationOptions.MaxRecursionDepth = $MatchType }
     if ($PSBoundParameters.ContainsKey('Depth')) { $EnumerationOptions.MaxRecursionDepth = $Depth; $EnumerationOptions.RecurseSubdirectories = $true }
-    $EnumerationOptions.ReturnSpecialDirectories = $ReturnSpecialDirectories.IsPresent
+    $EnumerationOptions.ReturnSpecialDirectories = $IncludeSpecialDirectories.IsPresent
 
     # Use specific method of class System.IO.Directory for files
     $Method = 'EnumerateFiles'
 
     # Regex matching RegexOptions
     # check https://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=net-7.0 for more information and implementations
-    $RegexOptions = [Text.RegularExpressions.RegexOptions]$(($RegexOptions -join ', ').TrimEnd(', '))
+    $Options = [Text.RegularExpressions.RegexOptions]$(($Options -join ', ').TrimEnd(', '))
 
     try {
         # if more than one string was given use foreach (so if input $Name is a string array)
@@ -190,11 +194,11 @@
                 $reader = [System.IO.StreamReader]::new($file)
                 while ($reader.EndOfStream -eq $false) {
                     $line = $reader.ReadLine()
-                    $match = [Regex]::Matches($line, $pattern, $RegexOptions)
+                    $match = [Regex]::Matches($line, $pattern, $Options)
                     if (-Not [string]::IsNullOrEmpty($match)) {
                         $Output = "$($file): $($line.Trim())"
                         if ($Highlight.IsPresent) {
-                            if ($RegexOptions -match 'IgnoreCase') {
+                            if ($Options -match 'IgnoreCase') {
                                 $Output = Select-String -InputObject $Output -Pattern $Pattern -AllMatches
                             } else {
                                 $Output = Select-String -InputObject $Output -Pattern $Pattern -AllMatches -CaseSensitive
