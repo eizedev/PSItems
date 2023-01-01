@@ -100,7 +100,7 @@
     .EXAMPLE
     PS C:\> psgrep 'output' -Name 'CHANGELOG.md' -Not
 
-    Negates above search. Searches for pattern 'output' in file 'CHANGELOG.md' in current directory and outputs all lines that are not match to this pattern.
+    Negates above search (grep -v). Searches for pattern 'output' in file 'CHANGELOG.md' in current directory and outputs all lines that are not match to this pattern.
     .LINK
     https://github.com/eizedev/PSItems
 
