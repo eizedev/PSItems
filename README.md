@@ -28,6 +28,8 @@ A PowerShell module that finds files and directories as well as file content and
 
 ## Overview
 
+> Take at look at the [Changelog](CHANGELOG.md) for latest changes.
+
 | PowerShell  | Linux/Unix    |    Description   |
 | --------------------------| --------------------- | ------------------------|
 | `psfind` -> Find-Item       | `find`        | `psfind` is similiar to linux/unix `find` command       |
