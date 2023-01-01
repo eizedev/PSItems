@@ -28,7 +28,11 @@ A PowerShell module that finds files and directories as well as file content and
 
 ## Overview
 
+---
+
 > Take at look at the [Changelog](CHANGELOG.md) for latest changes.
+
+---
 
 | PowerShell  | Linux/Unix    |    Description   |
 | --------------------------| --------------------- | ------------------------|
@@ -42,7 +46,11 @@ A PowerShell module that finds files and directories as well as file content and
 | `pssize`  | `pssize` | `Without parameter psfind rUses all items (files, junctions, directories...) in current directory and return size in MB |
 | `psgrep`  | `psgrep 'test'` | returns all files where `'test'` was found in format `filename: line` in the current directory |
 
+---
+
 > ``📝`` The functions of the module do not run with Windows PowerShell, they require at least PowerShell > 6.0 or a newer version. The [latest, stable PowerShell version](https://github.com/PowerShell/PowerShell/releases) is always recommended
+
+---
 
 As a person who works a lot with Linux distributions and had not found a way on Windows to find files or folders or their information in a FAST way, I developed this module or functions.
 At the beginning I was looking for an alternative to the Linux `find` and developed `Find-Item`.
