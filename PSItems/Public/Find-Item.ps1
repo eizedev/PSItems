@@ -65,6 +65,11 @@
     Find all items with file format exe in c:\windows without subdirectory and return each file as FileSystemInfo object
 
     .EXAMPLE
+    PS C:\> psfind
+
+    uses alias psfind for Find-Item. returns all items (files + directories) with full path in current folder
+
+    .EXAMPLE
     PS C:\> search
 
     uses alias search for Find-Item. returns all items (files + directories) with full path in current folder

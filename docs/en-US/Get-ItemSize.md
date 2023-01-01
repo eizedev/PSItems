@@ -49,11 +49,20 @@ Find all items with file ending exe in c:\windows without subdirectory and retur
 ### EXAMPLE 3
 
 ```
-size
+pssize
+```
+
+uses alias pssize for Get-ItemSize.
+Uses all items (files + directories) in current folder and return size in MB
+
+### EXAMPLE 4
+
+```
+size -R
 ```
 
 uses alias size for Get-ItemSize.
-Uses all items (files + directories) in current folder and return size in MB
+Uses all items (files + directories) in current folder and all subdirectories and return size in MB
 
 ## PARAMETERS
 
@@ -230,7 +239,8 @@ Accept wildcard characters: False
 ```
 
 ### -IncludeSpecialDirectories
-EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
+
+EnumerationOptions property ReturnSpecialDirectories. Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
 
 ```yaml
 Type: SwitchParameter
@@ -293,6 +303,7 @@ Accept wildcard characters: False
 ```
 
 ### -AsRaw
+
 if given, return size as raw value in Bytes without formatting
 
 ```yaml
@@ -308,6 +319,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
+
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS

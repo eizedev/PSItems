@@ -77,10 +77,15 @@ function Get-ItemSize {
 
     Find all items with file ending exe in c:\windows without subdirectory and return size in MB (default)
 
-    .EXAMPLE
-    PS C:\> size
+   .EXAMPLE
+    PS C:\> pssize
 
-    uses alias size for Get-ItemSize. Uses all items (files + directories) in current folder and return size in MB
+    uses alias pssize for Get-ItemSize. Uses all items (files + directories) in current folder and return size in MB
+
+    .EXAMPLE
+    PS C:\> size -R
+
+    uses alias size for Get-ItemSize. Uses all items (files + directories) in current folder and all subdirectories and return size in MB
 
     .LINK
     https://github.com/eizedev/PSItems

@@ -39,6 +39,15 @@ Find all items with file format exe in c:\windows without subdirectory and retur
 ### EXAMPLE 2
 
 ```
+psfind
+```
+
+uses alias psfind for Find-Item.
+returns all items (files + directories) with full path in current folder
+
+### EXAMPLE 3
+
+```
 search
 ```
 
@@ -237,7 +246,8 @@ Accept wildcard characters: False
 ```
 
 ### -IncludeSpecialDirectories
-EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
+
+EnumerationOptions property ReturnSpecialDirectories. Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
 
 ```yaml
 Type: SwitchParameter
@@ -252,6 +262,7 @@ Accept wildcard characters: False
 ```
 
 ### CommonParameters
+
 This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see [about_CommonParameters](http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
