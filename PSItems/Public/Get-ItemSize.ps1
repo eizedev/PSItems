@@ -94,9 +94,9 @@ function Get-ItemSize {
     .NOTES
     Author: Eizedev
 
-    Last Modified: Aug 08, 2022
+    Last Modified: Dec 31, 2022
 
-    Version: 1.1
+    Version: 1.2
 
     #>
 

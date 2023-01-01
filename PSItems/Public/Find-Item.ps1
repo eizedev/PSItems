@@ -81,9 +81,9 @@
     .NOTES
     Author: Eizedev
 
-    Last Modified: Jul 13, 2022
+    Last Modified: Dec 31, 2022
 
-    Version: 1.1
+    Version: 1.2
 
     #>
 
