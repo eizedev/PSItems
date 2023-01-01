@@ -16,7 +16,7 @@ Simple and fast function for finding any given string (regex pattern) in files o
 ```
 Find-ItemContent [-Pattern] <String> [[-Path] <String>] [[-Name] <String[]>] [-Recurse]
  [-IgnoreInaccessible <Boolean>] [-MatchCasing <String>] [-AttributesToSkip <String[]>] [-MatchType <String>]
- [-Depth <Int32>] [-ReturnSpecialDirectories] [-RegexOptions <String[]>] [<CommonParameters>]
+ [-Depth <Int32>] [-ReturnSpecialDirectories] [-RegexOptions <String[]>] [-Highlight] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -250,6 +250,21 @@ Aliases:
 Required: False
 Position: Named
 Default value: @('None')
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Highlight
+Using Microsoft.PowerShell.Commands.MatchInfo class (Select-String) to pre filtered highlight output
+
+```yaml
+Type: SwitchParameter
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

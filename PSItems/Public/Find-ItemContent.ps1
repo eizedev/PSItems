@@ -53,6 +53,11 @@
     .PARAMETER RegexOptions
     RegexOptions. Check hhttps://learn.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions?view=net-7.0 for more information.
 
+    .PARAMETER Highlight
+    Using Microsoft.PowerShell.Commands.MatchInfo class (Select-String) to pre filtered highlight output.
+    Direct usage of MatchInfo class is not possible since i also want to output the file where the pattern was found.
+    So we first use Regex class to find the pattern in a fast way and then use Select-String to output all as MatchInfo type to highlight the pattern.
+
     .EXAMPLE
     PS C:\> Find-ItemContent -Path c:\windows -Pattern 'WindowsUpdate' -Name '*.log' -Recurse
 
@@ -67,6 +72,11 @@
     PS C:\> psgrep 'test'
 
     Shortest possible command line call. Searching for 'test' in (-Path) the current directory and -Name will be '*' (all files in current directory)
+
+    .EXAMPLE
+    PS C:\> psgrep 'test' -H
+
+    Same as above example but the pattern 'test' will be highlightet (-H/-Highlight) in the output
     .LINK
     https://github.com/eizedev/PSItems
 
@@ -82,9 +92,9 @@
     .NOTES
     Author: Eizedev
 
-    Last Modified: Dez 30, 2022
+    Last Modified: Jan 01, 2023
 
-    Version: 1.0
+    Version: 1.3
 
     #>
 
@@ -140,7 +150,11 @@
         [Parameter(Mandatory = $false)]
         [ValidateSet('None', 'Compiled', 'CultureInvariant', 'ECMAScript', 'ExplicitCapture', 'IgnoreCase', 'IgnorePatternWhitespace', 'Multiline', 'NonBacktracking', 'RightToLeft', 'Singleline')]
         [string[]]
-        $RegexOptions = @('None')
+        $RegexOptions = @('None'),
+        # Using Microsoft.PowerShell.Commands.MatchInfo class (Select-String) to pre filtered highlight output
+        [Parameter(Mandatory = $false)]
+        [switch]
+        $Highlight
     )
 
     # System.IO Enumeration Options
@@ -172,7 +186,11 @@
                     $line = $reader.ReadLine()
                     $match = [Regex]::Matches($line, $pattern, $RegexOptions)
                     if (-Not [string]::IsNullOrEmpty($match)) {
-                        Write-Output "$($file): $($line.Trim())"
+                        $Output = "$($file): $($line.Trim())"
+                        if ($Highlight.IsPresent) {
+                            $Output = Select-String -InputObject $Output -Pattern $Pattern -AllMatches
+                        }
+                        Write-Output $Output
                     }
                 }
             }
