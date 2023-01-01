@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - `psgrep`
   - Added `IgnoreCase` support if `Highlight` (`-H`) is also present (`-H -O IgnoreCase`)
 - Updated parameter naming so that `-R` is exlusive in all functions (`-R` = `-Recurse`)
+  - All functions
+    - Renamed `ReturnSpecialDirectories` to `IncludeSpecialDirectories`
+  - `pssize`/`size`/`Get-ItemSize`
+    - Renamed `Raw` to `AsRaw`
+  - `psgrep`/`Find-ItemContent`
+    - Renamed `RegexOptions` to `Options`
 
 ## [0.3.3]
 
