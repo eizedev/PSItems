@@ -52,13 +52,13 @@ function Get-ItemSize {
     .PARAMETER Depth
     EnumerationOptions property Depth. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
-    .PARAMETER ReturnSpecialDirectories
+    .PARAMETER IncludeSpecialDirectories
     EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
     .PARAMETER Format
     Format (ByteSize) in which the size will be calculated and returned (KB, MB, TB, PB)
 
-    .PARAMETER Raw
+    .PARAMETER AsRaw
     if given, return size as raw value in Bytes without formatting
 
     .PARAMETER Decimals
@@ -68,7 +68,7 @@ function Get-ItemSize {
     if given, return formatted size as raw value in the format specified with -Format
 
     .EXAMPLE
-    PS C:\> Get-ItemSize -Path c:\windows -Raw
+    PS C:\> Get-ItemSize -Path c:\windows -AsRaw
 
     Find all items in c:\windows without subdirectory and return size in raw format (Bytes)
 
@@ -148,7 +148,7 @@ function Get-ItemSize {
         # if given, return the special directory entries "." and ".."; otherwise, false
         [Parameter(Mandatory = $false)]
         [switch]
-        $ReturnSpecialDirectories,
+        $IncludeSpecialDirectories,
         # Format (ByteSize) in which the size will be returned
         [ValidateSet ('KB', 'MB', 'GB', 'TB')]
         [string]
@@ -171,7 +171,7 @@ function Get-ItemSize {
         # if given, return size as raw value in Bytes without formatting
         [Parameter(Mandatory = $false)]
         [switch]
-        $Raw
+        $AsRaw
     )
 
     # Input Validation
@@ -185,7 +185,7 @@ function Get-ItemSize {
     $EnumerationOptions.AttributesToSkip = $AttributesToSkip
     if ($PSBoundParameters.ContainsKey('MatchType')) { $EnumerationOptions.MaxRecursionDepth = $MatchType }
     if ($PSBoundParameters.ContainsKey('Depth')) { $EnumerationOptions.MaxRecursionDepth = $Depth; $EnumerationOptions.RecurseSubdirectories = $true }
-    $EnumerationOptions.ReturnSpecialDirectories = $ReturnSpecialDirectories.IsPresent
+    $EnumerationOptions.ReturnSpecialDirectories = $IncludeSpecialDirectories.IsPresent
 
     # Use specific method of class System.IO.Directory
     switch ($Type) {
@@ -216,7 +216,7 @@ function Get-ItemSize {
         throw $_.Exception.Message
     }
 
-    if ($Raw.IsPresent) {
+    if ($AsRaw.IsPresent) {
         Write-Output $ItemSize
     } else {
         switch ($Format) {

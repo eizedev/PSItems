@@ -16,7 +16,7 @@ Simple and fast function for getting the size of any item on the filesystem (lik
 ```
 Get-ItemSize [[-Path] <String>] [[-Name] <String[]>] [-Type <String>] [-Recurse]
  [-IgnoreInaccessible <Boolean>] [-MatchCasing <String>] [-AttributesToSkip <String[]>] [-MatchType <String>]
- [-Depth <Int32>] [-ReturnSpecialDirectories] [-Format <String>] [-Decimals <Int32>] [-FormatRaw] [-Raw]
+ [-Depth <Int32>] [-IncludeSpecialDirectories] [-Format <String>] [-Decimals <Int32>] [-FormatRaw] [-AsRaw]
  [<CommonParameters>]
 ```
 
@@ -229,10 +229,8 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -ReturnSpecialDirectories
-
-EnumerationOptions property ReturnSpecialDirectories.
-Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
+### -IncludeSpecialDirectories
+EnumerationOptions property ReturnSpecialDirectories. Check https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0 for more information.
 
 ```yaml
 Type: SwitchParameter
@@ -294,8 +292,7 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Raw
-
+### -AsRaw
 if given, return size as raw value in Bytes without formatting
 
 ```yaml
