@@ -48,7 +48,7 @@ At the beginning I was looking for an alternative to the Linux `find` and develo
 Of course, all the functions in this module will be working on Windows, Linux and macOS.
 
 `Get-ChildItem` works great to get an overview of current files and folders, but is very, very slow when dealing with a lot of filesystem objects.
-So I decided to use the .NET classes directly and used only the functionalities I really need for the particular case.
+So I decided to use the .NET api directly and used only the functionalities I really need for the particular case.
 
 Since then, I don't have to bother with the Windows Explorer built-in search or struggle around with slowly calling `Get-ChildItem`.
 
