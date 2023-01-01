@@ -5,6 +5,12 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.3.4]
+
+- `psgrep`
+  - Added `IgnoreCase` support if `Highlight` (`-H`) is also present (`-H -O IgnoreCase`)
+- Updated parameter naming so that `-R` is exlusive in all functions (`-R` = `-Recurse`)
+
 ## [0.3.3]
 
 - Added `Hightlight` (`-H`) switch to highlight the pattern in the output when using `psgrep` (`Find-ItemContent`)
@@ -53,6 +59,7 @@ Second testing release
 
 First testing release
 
+[0.3.4]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.3.3...v0.3.4
 [0.3.3]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.3.2...v0.3.3
 [0.3.2]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.3.1...v0.3.2
 [0.3.1]: https://github.com/olivierlacan/keep-a-changelog/compare/v0.3.0...v0.3.1
