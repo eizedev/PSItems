@@ -208,10 +208,12 @@
         foreach ($input in $Name) {
             foreach ($item in [System.IO.Directory]::$($Method)($path, $input, $EnumerationOptions)) {
                 $file = [string]::new($item)
-                # Read each line using streamreader and use regex to find given pattern in each line. Output filename and matched line
-                $reader = [System.IO.StreamReader]::new($file)
-                while ($reader.EndOfStream -eq $false) {
-                    $line = $reader.ReadLine()
+                # Read each line using streamreader (ReadOnly Filestream) and use regex to find given pattern in each line.
+                # Output filename and matched line
+                $FileStream = [System.IO.FileStream]::new($file, [System.IO.FileMode]::Open, [System.IO.FileAccess]::Read, [System.IO.FileShare]::Read)
+                $Reader = [System.IO.StreamReader]::new($FileStream)
+                while ($Reader.EndOfStream -eq $false) {
+                    $line = $Reader.ReadLine()
                     $match = [Regex]::Matches($line, $pattern, $Options)
                     if (-Not $NotMatch) {
                         if (-Not [string]::IsNullOrEmpty($match)) {
@@ -230,8 +232,10 @@
                         Write-Output $Output
                     }
                 }
-                $reader.Close()
-                $reader.Dispose()
+                $Reader.Close()
+                $Reader.Dispose()
+                $FileStream.Close()
+                $FileStream.Dispose()
             }
         }
     } catch {

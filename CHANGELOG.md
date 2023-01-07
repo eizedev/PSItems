@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [0.3.6]
 
 - [psgrep - Close StreamReader](https://github.com/eizedev/PSItems/issues/11)
+- [psgrep - Use ReadOnly FileStream instead of direct access with Streamreader](https://github.com/eizedev/PSItems/issues/10)
 
 ## [0.3.5]
 
