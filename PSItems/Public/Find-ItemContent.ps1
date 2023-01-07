@@ -230,6 +230,8 @@
                         Write-Output $Output
                     }
                 }
+                $reader.Close()
+                $reader.Dispose()
             }
         }
     } catch {
