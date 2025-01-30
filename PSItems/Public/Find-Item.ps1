@@ -97,7 +97,7 @@
     [CmdletBinding()]
     [OutputType('System.String', 'System.IO.FileSystemInfo')]
     param (
-        # Path to search for files
+        # Path to search for files.  Defaults to current directory.
         [Parameter(Mandatory = $false, Position = 0)]
         [string]
         $Path = $pwd,
@@ -164,6 +164,10 @@
         'File' { $Method = 'EnumerateFiles' }
         Default { $Method = 'EnumerateFileSystemEntries' }
     }
+
+    # Resolve absolute path in case it is relative
+    [ref] $dummy = $null
+    $Path = $PSCmdlet.GetResolvedProviderPathFromPSPath($Path, $dummy)
 
     try {
         # if more than one string was given use foreach (so if input $Name is a string array)
