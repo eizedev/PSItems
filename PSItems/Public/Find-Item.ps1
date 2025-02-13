@@ -165,14 +165,14 @@
         Default { $Method = 'EnumerateFileSystemEntries' }
     }
 
-    # Resolve absolute path in case it is relative
-    [ref] $dummy = $null
-    $Path = $PSCmdlet.GetResolvedProviderPathFromPSPath($Path, $dummy)
-
     try {
+        # Resolve absolute path in case it is relative
+        [ref] $dummy = $null
+        $absolutePath = $PSCmdlet.GetResolvedProviderPathFromPSPath($Path, $dummy)
+
         # if more than one string was given use foreach (so if input $Name is a string array)
         foreach ($input in $Name) {
-            foreach ($item in [System.IO.Directory]::$($Method)($path, $input, $EnumerationOptions)) {
+            foreach ($item in [System.IO.Directory]::$($Method)($absolutePath, $input, $EnumerationOptions)) {
                 if ($As -eq 'FileInfo') { $file = [System.IO.FileInfo]::new($item) } else { $file = [string]::new($item) }
                 Write-Output $file
             }
