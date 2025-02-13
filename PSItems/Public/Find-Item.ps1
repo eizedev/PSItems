@@ -178,7 +178,8 @@
             }
         }
     } catch {
-        throw $_.Exception.Message
+        Write-Error $_
+        return
     }
 }
 
