@@ -206,8 +206,7 @@ The goal is simple, ergonomic, **fast** filesystem utilities.
 PRs that improve performance, reliability, cross‑platform behavior, or docs are welcome.
 
 - File issues: <https://github.com/eizedev/PSItems/issues>
-- Run locally: `./build.ps1 -Bootstrap; ./build.ps1 -Task Analyze,Test -Verbose`
-- Read the full guide: **[CONTRIBUTING.md](.github/CONTRIBUTING.md)**
+- Read the full guide (Contributing, Local Development, platyPS Documentation, Publish Releases, DevContainer): **[CONTRIBUTING.md](.github/CONTRIBUTING.md)**
 
 > Publishing to the PowerShell Gallery is automated via GitHub Actions and triggered by tags like `v0.7.0`. See **[CONTRIBUTING.md](.github/CONTRIBUTING.md)** for the exact steps.
 
