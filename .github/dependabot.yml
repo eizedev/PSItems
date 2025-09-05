@@ -5,7 +5,19 @@
 
 version: 2
 updates:
-  - package-ecosystem: "github-actions" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  - package-ecosystem: "github-actions"
+    directory: "/"                 # Location of workflow files
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "08:00"
+      timezone: "Europe/Berlin"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    rebase-strategy: "auto"
+    groups:
+      all-actions:
+        patterns:
+          - "*"                    # group all GitHub Actions updates into a single PR
