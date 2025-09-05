@@ -1,12 +1,12 @@
 # PSItems
 
-| GitHub Actions                                                         | PS Gallery                                          | License                              | Issues                            |
-| ---------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------ | --------------------------------- |
-| [![GitHub Actions Status][github-actions-badge]][github-actions-build] | [![PowerShell Gallery][psgallery-badge]][psgallery] | [![License][license-badge]][license] | [![Open Issues][issues-badge]][issues]  |
+| GitHub Actions                                                         | PS Gallery                                          | License                              | Issues                                 |
+| ---------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------ | -------------------------------------- |
+| [![GitHub Actions Status][github-actions-badge]][github-actions-build] | [![PowerShell Gallery][psgallery-badge]][psgallery] | [![License][license-badge]][license] | [![Open Issues][issues-badge]][issues] |
 
 ---
 
-A PowerShell module that finds files and directories as well as file content and file and directory information the quick and easy way!
+A PowerShell module to **find files/directories**, **search file content**, and **inspect sizes** — fast and with an easy, Linux-like UX.
 
 ![Logo](res/logo.png)
 
@@ -14,145 +14,147 @@ A PowerShell module that finds files and directories as well as file content and
 
 - [PSItems](#psitems)
   - [Overview](#overview)
-  - [Roadmap](#roadmap)
+    - [Aliases at a glance](#aliases-at-a-glance)
+  - [Linux `find` ↔︎ `Find-Item` Compatibility](#linux-find-︎-find-item-compatibility)
   - [Installation](#installation)
   - [Usage](#usage)
     - [Functions](#functions)
-    - [Help](#help)
+    - [Quick start](#quick-start)
+      - [Find-Item (`psfind`)](#find-item-psfind)
+      - [Get-ItemSize (`pssize`)](#get-itemsize-pssize)
+      - [Find-ItemContent (`psgrep`)](#find-itemcontent-psgrep)
   - [Testing and Speed](#testing-and-speed)
     - [1 - Windows directory recursively - Return FullName strings](#1---windows-directory-recursively---return-fullname-strings)
     - [2 - Windows directory recursively - Return FileInfo objects](#2---windows-directory-recursively---return-fileinfo-objects)
-  - [Contributions](#contributions)
+  - [Contributing](#contributing)
 
 ---
 
 ## Overview
 
+- Cross-platform: **Windows**, **Linux**, **macOS**
+- Requires **PowerShell 7+** (PowerShell Core)
+- Uses .NET’s high-performance `System.IO.Directory.Enumerate*` APIs to keep memory low and throughput high
+- “Item” means any filesystem object: files, directories, junctions, symlinks, etc.
+
+> See the [Changelog](CHANGELOG.md) for what’s new in each release.
+
+> 📝 **Note:** The module does **not** support Windows PowerShell 5.1; it requires PowerShell 7 or newer.
+
+PSItems grew out of my need for a fast, Linux-like way to search the filesystem on Windows.
+While Get-ChildItem is fine for casual listing, it becomes slow at scale, so this module uses .NET’s streaming System.IO.Directory.Enumerate* APIs and focuses on just the features that matter.
+"Item" is intentional: these tools work with any filesystem object—files, directories, junctions, symlinks—across Windows, Linux, and macOS.
+
+### Aliases at a glance
+
+| Aliases                        | Underlying cmdlet  | Linux/Unix analog | Description                         |
+| ------------------------------ | ------------------ | ----------------- | ----------------------------------- |
+| `psfind`, `search`, `ff`, `fi` | `Find-Item`        | `find`            | Find items (files/directories/etc.) |
+| `psgrep`                       | `Find-ItemContent` | `grep`            | Search for text/regex in files      |
+| `pssize`, `size`               | `Get-ItemSize`     | `du`              | Measure size of files/directories   |
+
+
 ---
 
-> Take at look at the [Changelog](CHANGELOG.md) for latest changes.
+## Linux `find` ↔︎ `Find-Item` Compatibility
+
+> **Copy note:** In the table below the pipeline character is escaped as `\|` so the table renders.
+> When copying to a shell, **remove the backslashes** before `|`.
+
+| Linux `find` feature                           | Meaning                            | `Find-Item` equivalent                                            | Example (remember to unescape `\|`)                                                                                                                                                                     |
+| ---------------------------------------------- | ---------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Multiple start paths / wildcard-expanded roots | Shell expands to multiple roots    | **Supported**: the provider expands **`-Path`** wildcards         | `psfind -Path 'C:\Users\*\Documents' -Name *.log -Recurse`                                                                                                                                              |
+| `/`                                            | Root directory                     | On Windows, `/` resolves to `C:\`                                 | `psfind / -Name '*' -Recurse`                                                                                                                                                                           |
+| `-name PATTERN`                                | Case-sensitive (Linux)             | `-Name PATTERN` uses platform default casing                      | `psfind / -Name '*.log' -Recurse`                                                                                                                                                                       |
+| `-iname PATTERN`                               | Case-insensitive                   | `-Iname PATTERN` (always case-insensitive)                        | `psfind / -Iname '*.exe' -Recurse`                                                                                                                                                                      |
+| Casing behavior                                | Varies by OS                       | Windows: `-Name` is case-insensitive; Linux/macOS: case-sensitive | —                                                                                                                                                                                                       |
+| `-type f`                                      | Files only                         | `-Type File`                                                      | `psfind / -Type File -Name '*.txt' -Recurse`                                                                                                                                                            |
+| `-type d`                                      | Directories only                   | `-Type Directory`                                                 | `psfind / -Type Directory -Name 'Pro*' -Recurse`                                                                                                                                                        |
+| `-maxdepth N`                                  | Limit recursion depth              | `-Depth N` (also implies recurse)                                 | `psfind / -Depth 2 -Name '*.dll'`                                                                                                                                                                       |
+| `-mindepth N`                                  | Minimum depth before matching      | `-MinDepth N`                                                     | `psfind / -MinDepth 3 -Iname '*temp*' -Recurse`                                                                                                                                                         |
+| `-ls`                                          | Detailed listing                   | `-As FileSystemInfo`                                              | `psfind / -As FileSystemInfo -Recurse`                                                                                                                                                                  |
+| `-exec … {}`                                   | Run command per match              | Pipe to PowerShell                                                | `psfind $HOME -Type File -Iname '*.txt' -Recurse \| ForEach-Object { (Get-Content $_ -ReadCount 0 \| Measure-Object -Line).Lines }`                                                                     |
+| `-perm`, `-size`, `-mtime`                     | Permission/size/time filtering     | Not built-in → filter in pipeline                                 | **Typed**: `psfind $HOME -Type File -As FileSystemInfo -Recurse -Depth 1 \| Where-Object Length -gt 1MB` — or — **String**: `psfind $HOME -Type File -Recurse -Depth 1 \| Get-Item \| ? Length -gt 1MB` |
+| `-prune`                                       | Exclude directories from traversal | Not built-in → pattern/pipeline filtering                         | `psfind $HOME -Recurse \| Where-Object { $_ -notlike '*\node_modules\*' }`                                                                                                                              |
+
+**Notes**
+- `-Path` wildcards expand to **multiple roots** (Linux-like behavior). Each root is searched independently, and `-MinDepth` applies per root.
+- Casing: Use `-Iname` for consistent case-insensitive pattern matching across platforms.
+- Output modes: `-As String` (fastest), `-As FileSystemInfo` (recommended typed output), `-As FileInfo` kept for backward compatibility (directories still return `DirectoryInfo`).
 
 ---
-
-| PowerShell  | Linux/Unix    |    Description   |
-| --------------------------| --------------------- | ------------------------|
-| `psfind` -> Find-Item       | `find`        | `psfind` is similiar to linux/unix `find` command       |
-| `psgrep` -> Find-ItemContent  | `grep` | `psgrep` is similiar to linux/unix `grep` command |
-| `pssize` -> Get-ItemSize  | `du` | `pssize` is similiar to linux/unix `du` command |
-
-| CmdLet  | Command    |    Description   |
-| --------------------------| --------------------- | ------------------------|
-| `psfind`       | `psfind`       | Without parameter psfind returns all items (files, junctions, directories...) with full path in current directory     |
-| `pssize`  | `pssize` | `Without parameter psfind rUses all items (files, junctions, directories...) in current directory and return size in MB |
-| `psgrep`  | `psgrep 'test'` | returns all files where `'test'` was found in format `filename: line` in the current directory |
-
----
-
-> ``📝`` The functions of the module do not run with Windows PowerShell, they require at least PowerShell > 6.0 or a newer version. The [latest, stable PowerShell version](https://github.com/PowerShell/PowerShell/releases) is always recommended
-
----
-
-As a person who works a lot with Linux distributions and had not found a way on Windows to find files or folders or their information in a FAST way, I developed this module or functions.
-At the beginning I was looking for an alternative to the Linux `find` and developed `Find-Item`.
-
-Of course, all the functions in this module will be working on Windows, Linux and macOS.
-
-`Get-ChildItem` works great to get an overview of current files and folders, but is very, very slow when dealing with a lot of filesystem objects.
-So I decided to use the .NET api directly and used only the functionalities I really need for the particular case.
-
-Since then, I don't have to bother with the Windows Explorer built-in search or struggle around with slowly calling `Get-ChildItem`.
-
-The term "**item**" in PSItems or also the individual function names is a collective term for all file system objects, such as files and directories.
-Therefore, for example, the function is called `Find-Item` and not `Find-File`, because with it also junctions, directories, shortcuts etc. can be found.
-
-## Roadmap
-
-> ``📝`` This module is currently under construction and therefore in BETA. The already integrated functions work basically but can still have errors.
-
-- Tests
-  - Add Pester Tests for `Get-ItemSize` and `Find-Item` and `Find-ItemContent`
-    - [ ] Windows
-      - in progress
-    - [ ] Linux
-    - [ ] macOS
-      - in progress
-- Documentation
-  - Update documentation for functions with more, detailed examples
-    - [ ] `Find-Item`
-    - [ ] `Get-ItemSize`
-    - [ ] `Find-ItemContent`
-- Security
-  - Add code scanning using github workflow
-- New functions and features
-  - Further functions around FileSystem objects will be integrated if required. Suggestions are welcome
 
 ## Installation
 
-Installation of this module is straight forward, just install it and import it.
+Install from the PowerShell Gallery:
 
-```pwsh
-Install-Module -Name PSItems
-Import-Module -Name PSItems
-```
+    Install-Module -Name PSItems -Scope CurrentUser
+    Import-Module -Name PSItems
+
+> You can also vendor the module: clone the repo and `Import-Module` from its path for local development.
+
+---
 
 ## Usage
 
-The usage and a few examples can be found in the [documentation folder](docs/en-US/) or by using the `Get-Help` cmdlet.
+Full docs are in [`docs/en-US`](docs/en-US/) and via `Get-Help`.
 
-| Cmdlet                                            | Description                                                                                         | Documentation                                  |
-| ------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ---------------------------------------------- |
-| [Find-Item](PSItems/Public/Find-Item.ps1)       | Simple and fast function for finding any item on the filesystem (like find on linux/unix)           | [Find-Item](docs/en-US/Find-Item.md)       |
-| [Get-ItemSize](PSItems/Public/Get-ItemSize.ps1) | Simple and fast function for getting the size of any item on the filesystem (like du on linux/unix) | [Get-ItemSize](docs/en-US/Get-ItemSize.md) |
-| [Find-ItemContent](PSItems/Public/Find-ItemContent.ps1) | Simple and fast function for finding any given string (regex pattern) in files on the filesystem (like grep on linux/unix) | [Find-ItemContent](docs/en-US/Find-ItemContent.md) |
-
----
+| Cmdlet                                                  | Description                                         | Documentation                                      |
+| ------------------------------------------------------- | --------------------------------------------------- | -------------------------------------------------- |
+| [Find-Item](PSItems/Public/Find-Item.ps1)               | Find any item on the filesystem (Linux-like `find`) | [Find-Item](docs/en-US/Find-Item.md)               |
+| [Get-ItemSize](PSItems/Public/Get-ItemSize.ps1)         | Get the size of items (Linux-like `du`)             | [Get-ItemSize](docs/en-US/Get-ItemSize.md)         |
+| [Find-ItemContent](PSItems/Public/Find-ItemContent.ps1) | Find a string/regex in files (Linux-like `grep`)    | [Find-ItemContent](docs/en-US/Find-ItemContent.md) |
 
 ### Functions
 
-Get functions of module:
+List all exported commands:
 
-```pwsh
-Get-Command -Module PSItems -CommandType All
+    Get-Command -Module PSItems -CommandType All
+
+### Quick start
+
+These examples are conservative and should work on most machines.
+
+#### Find-Item (`psfind`)
+```powershell
+# List everything in your home directory (one level down), as fast strings
+psfind $HOME -Name '*' -Depth 1
+
+# Case-insensitive search for *.log anywhere under $HOME
+psfind $HOME -Type File -Iname '*.log' -Recurse
 ```
 
-```pwsh
-CommandType     Name                                               Version    Source
------------     ----                                               -------    ------
-Alias           psfind -> Find-Item                                0.3.1      PSItems
-Alias           psgrep -> Find-ItemContent                         0.3.1      PSItems
-Alias           pssize -> Get-ItemSize                             0.3.1      PSItems
-Alias           search -> Find-Item                                0.3.1      PSItems
-Alias           size -> Get-ItemSize                               0.3.1      PSItems
-Function        Find-Item                                          0.3.1      PSItems
-Function        Find-ItemContent                                   0.3.1      PSItems
-Function        Get-ItemSize                                       0.3.1      PSItems
+#### Get-ItemSize (`pssize`)
+```powershell
+# Total size of your home directory (one level down), in MB (default)
+pssize $HOME -Depth 1
+
+# Size of only files under Documents, returned as a raw byte count
+Get-ItemSize -Path (Join-Path $HOME 'Documents') -Type File -Raw
 ```
+
+#### Find-ItemContent (`psgrep`)
+```powershell
+# Find 'TODO' in all PowerShell scripts under your home directory (recursive)
+psgrep 'TODO' $HOME -Name '*.ps1' -Recurse
+
+# Count lines for each *.txt file under $HOME (pipeline "exec"-style)
+psfind $HOME -Type File -Iname '*.txt' -Recurse |
+ForEach-Object {
+  [pscustomobject]@{
+    Path  = $_
+    Lines = (Get-Content $_ | Measure-Object -Line).Lines
+  }
+}
+```
+
+> More examples and full parameter docs: see [`docs/en-US`](docs/en-US/) or `Get-Help <CmdletName> -Full`.
 
 ---
 
-### Help
-
-Get help of function:
-
-```pwsh
-Get-Help Find-Item
-```
-
-```pwsh
-NAME
-    Find-Item
-
-SYNOPSIS
-    Simple and fast function for finding any item on the filesystem (like find on linux/unix)
-
-
-SYNTAX
-    Find-Item [[-Path] <String>] [[-Name] <String[]>] [-Type <String>] [-Recurse] [-IgnoreInaccessible <Boolean>] [-As <String>] [-MatchCasing <String>] [-AttributesToSkip <String[]>] [-MatchType
-    <String>] [-Depth <Int32>] [-ReturnSpecialDirectories] [<CommonParameters>]
-...
-```
-
 ## Testing and Speed
+
+> You’ll find historical measurements below. New benchmarks are coming soon. Much faster now.
 
 > Testsystem was a windows 10 Lenovo T480 (SSD + Indexing disabled).
 
@@ -160,7 +162,9 @@ SYNTAX
 
 Returned will be an array of the path of all files (FullName).
 
-`Measure-Command { $windir = search C:\Windows\ '*' -Recurse -AttributesToSkip 0 }`
+```powershell
+Measure-Command { $windir = search C:\Windows\ '*' -Recurse -AttributesToSkip 0 }
+```
 
 Finding all items (files, directories...) in `C:Windows` directory including all subdirectories (`-Recurse`) as well as hidden and system files (`-AttributesToSkip 0`) using the `Find-Item` function
 
@@ -174,7 +178,9 @@ In about 1 minute the function found all files, directories etc. in the complete
 
 Returned will be an array of objects (FileInfo) of all items. Same as using Get-ChildItem.
 
-`Measure-Command { $windir = search C:\Windows\ '*' -Recurse -AttributesToSkip 0 -As FileInfo }`
+```powershell
+Measure-Command { $windir = search C:\Windows\ '*' -Recurse -AttributesToSkip 0 -As FileInfo }
+```
 
 Finding all items (files, directories...) in `C:Windows` directory including all subdirectories (`-Recurse`) as well as hidden and system files (`-AttributesToSkip 0`) using the `Find-Item` function.
 
@@ -185,20 +191,23 @@ The alias `search` was used and for the `-Path` (`C:\windows`) and `-Name` (`'*'
 
 In about 2 minutes the function found all files, directories etc. in the complete windows directory and returned an array of FileInfo objects of all items with all properties. As with Get-ChildItem, you can simply continue to use the individual objects.
 
-## Contributions
+---
 
-The goal of this project is to write simple but (very) fast functions for finding (and perhaps managing) FileSystem Objects and their information.
+## Contributing
 
-Additional features or capabilities that benefit the community are welcome.
+The goal is simple, ergonomic, **fast** filesystem utilities.
+PRs that improve performance, reliability, cross-platform behavior, or docs are very welcome.
 
-If you find bugs, please report them on the [issues page](https://github.com/eizedev/PSItems/issues) or, if you can, open a pull request directly with a solution.
-If you have a good idea for improving individual features or for new features, feel free to let me know as well.
+- File issues if you have some: <https://github.com/eizedev/PSItems/issues>
+- Run tests locally: `./build.ps1 -Bootstrap; ./build.ps1 -Task Analyze,Test`
+
+---
 
 [github-actions-badge]: https://github.com/eizedev/PSItems/workflows/CI/badge.svg
 [github-actions-build]: https://github.com/eizedev/PSItems/actions
 [psgallery-badge]: https://img.shields.io/powershellgallery/dt/PSItems.svg
 [psgallery]: https://www.powershellgallery.com/packages/PSItems
 [license-badge]: https://img.shields.io/github/license/eizedev/PSItems.svg
-[license]: https://www.powershellgallery.com/packages/PSItems
+[license]: LICENSE
 [issues-badge]: https://img.shields.io/github/issues-raw/eizedev/PSItems.svg
 [issues]: https://github.com/eizedev/PSItems/issues

@@ -1,48 +1,44 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-#
-# https://github.com/microsoft/action-psscriptanalyzer
-# For more information on PSScriptAnalyzer in general, see
-# https://github.com/PowerShell/PSScriptAnalyzer
+# Static analysis via PSScriptAnalyzer with SARIF results
+# Action: https://github.com/microsoft/psscriptanalyzer-action (v1.1)
 
 name: PSScriptAnalyzer
 
 on:
   push:
-    branches: ["master"]
+    branches: [ "master" ]
   pull_request:
-    branches: ["master"]
+    branches: [ "master" ]
   schedule:
-    - cron: "38 14 * * 2"
+    - cron: "38 14 * * 2"  # Weekly, Tue 14:38 UTC
 
 permissions:
   contents: read
 
 jobs:
-  build:
-    permissions:
-      contents: read # for actions/checkout to fetch code
-      security-events: write # for github/codeql-action/upload-sarif to upload SARIF results
+  analyze:
     name: PSScriptAnalyzer
     runs-on: ubuntu-latest
+    permissions:
+      contents: read              # checkout code
+      security-events: write      # upload SARIF to code scanning
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v5
 
       - name: Run PSScriptAnalyzer
         uses: microsoft/psscriptanalyzer-action@v1.1
         with:
-          # Check https://github.com/microsoft/action-psscriptanalyzer for more info about the options.
-          path: .\
+          # Prefer POSIX-style paths for cross-OS; the action accepts both . and .\
+          path: .
           recurse: true
           ignorePattern: "tests"
           includeDefaultRules: true
+          # Example exclude rule; keep quoting style required by the action's parser
           excludeRule: '"PSUseToExportFieldsInManifest"'
           settings: "tests/ScriptAnalyzerSettings.psd1"
           output: results.sarif
 
-      # Upload the SARIF file generated in the previous step
       - name: Upload SARIF results file
         uses: github/codeql-action/upload-sarif@v3
         with:
