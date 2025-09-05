@@ -1,4 +1,6 @@
 # Taken with love from @juneb_get_help (https://raw.githubusercontent.com/juneb/PesterTDD/master/Module.Help.Tests.ps1)
+# Hardened for PSItems: fail when external help is missing or incomplete.
+# Toggle strict link checks by setting environment variable HELP_LINKS_STRICT=true
 
 BeforeDiscovery {
 
@@ -7,7 +9,7 @@ BeforeDiscovery {
         $commonParams = @(
             'Debug', 'ErrorAction', 'ErrorVariable', 'InformationAction', 'InformationVariable',
             'OutBuffer', 'OutVariable', 'PipelineVariable', 'Verbose', 'WarningAction',
-            'WarningVariable', 'Confirm', 'WhatIf', 'ProgressAction' # include ProgressAction for PS7+
+            'WarningVariable', 'Confirm', 'WhatIf', 'ProgressAction' # PS7+
         )
         $Params | Where-Object { $_.Name -notin $commonParams } | Sort-Object -Property Name -Unique
     }
@@ -39,7 +41,7 @@ Describe 'Test help for <_.Name>' -ForEach $commands {
         $commandHelp = Get-Help $command.Name -ErrorAction SilentlyContinue
         $commandParameters = global:FilterOutCommonParams -Params $command.ParameterSets.Parameters
         $commandParameterNames = $commandParameters.Name
-        $helpLinks = $commandHelp.relatedLinks.navigationLink.uri
+        $helpLinks = if ($commandHelp) { $commandHelp.relatedLinks.navigationLink.uri } else { @() }
     }
 
     BeforeAll {
@@ -50,33 +52,30 @@ Describe 'Test help for <_.Name>' -ForEach $commands {
         $commandParameterNames = $commandParameters.Name
         $helpParameters = if ($commandHelp) { global:FilterOutCommonParams -Params $commandHelp.Parameters.Parameter } else { @() }
         $helpParameterNames = $helpParameters.Name
+        $strictLinks = [bool]($env:HELP_LINKS_STRICT -eq 'true')
     }
 
-    # If help is not found, synopsis in auto-generated help is the syntax diagram
-    It 'Help is not auto-generated' -Skip:(-not $commandHelp) {
+    It 'Has external help loaded (no auto-generated help)' {
+        $commandHelp | Should -Not -BeNullOrEmpty
         $commandHelp.Synopsis | Should -Not -BeLike '*`[`<CommonParameters`>`]*'
     }
 
-    It 'Has description' -Skip:(-not $commandHelp) {
+    It 'Has description' {
         $commandHelp.Description | Should -Not -BeNullOrEmpty
     }
 
-    It 'Has example code' -Skip:(-not $commandHelp) {
+    It 'Has example code' {
         ($commandHelp.Examples.Example | Select-Object -First 1).Code | Should -Not -BeNullOrEmpty
     }
 
-    It 'Has example help (remarks or intro if present)' -Skip:(-not $commandHelp -or -not ($commandHelp.Examples.Example | Select-Object -First 1)) {
+    It 'Has example help (remarks or introduction)' {
         $ex = $commandHelp.Examples.Example | Select-Object -First 1
+        $ex | Should -Not -BeNullOrEmpty
         $remarks = @($ex.Remarks | ForEach-Object { $_.Text }) -join ''
         if ([string]::IsNullOrWhiteSpace($remarks)) {
             $remarks = @($ex.Introduction | ForEach-Object { $_.Text }) -join ''
         }
-        # Only assert if there is a remarks/introduction node present; otherwise skip.
-        if ($ex.Remarks -or $ex.Introduction) {
-            $remarks | Should -Not -BeNullOrEmpty
-        } else {
-            Set-ItResult -Pending -Because 'No remarks/introduction node in generated help.'
-        }
+        $remarks | Should -Not -BeNullOrEmpty
     }
 
     It 'Help link <_> is valid' -ForEach $helpLinks {
@@ -84,8 +83,12 @@ Describe 'Test help for <_.Name>' -ForEach $commands {
             $resp = Invoke-WebRequest -Uri $_ -UseBasicParsing -MaximumRedirection 5 -ErrorAction Stop
             [int]$resp.StatusCode | Should -BeIn @(200, 201, 202, 203, 204, 301, 302, 307, 308)
         } catch {
-            Write-Warning "Link check skipped due to network error for [$($_)]: $($_.Exception.Message)"
-            1 | Should -Be 1
+            if ($strictLinks) {
+                throw
+            } else {
+                Write-Warning "Link check skipped due to network error for [$($_)]: $($_.Exception.Message)"
+                Set-ItResult -Pending -Because 'Network error while validating link.'
+            }
         }
     }
 
@@ -94,20 +97,24 @@ Describe 'Test help for <_.Name>' -ForEach $commands {
         BeforeAll {
             $parameter = $_
             $parameterName = $parameter.Name
-            $parameterHelp = if ($commandHelp) { $commandHelp.parameters.parameter | Where-Object Name -EQ $parameterName }
-            $parameterHelpType = if ($parameterHelp -and $parameterHelp.ParameterValue) { $parameterHelp.ParameterValue.Trim() }
+            $parameterHelp = $commandHelp.parameters.parameter | Where-Object Name -EQ $parameterName
+            $parameterHelpType = if ($parameterHelp.ParameterValue) { $parameterHelp.ParameterValue.Trim() }
         }
 
-        It 'Has description' -Skip:(-not $parameterHelp) {
+        It 'Has help entry for parameter' {
+            $parameterHelp | Should -Not -BeNullOrEmpty
+        }
+
+        It 'Has description' {
             $parameterHelp.Description.Text | Should -Not -BeNullOrEmpty
         }
 
-        It 'Has correct [mandatory] value' -Skip:(-not $parameterHelp) {
-            $codeMandatory = $_.IsMandatory.ToString()
+        It 'Has correct [mandatory] value' {
+            $codeMandatory = $parameter.IsMandatory.ToString()
             $parameterHelp.Required | Should -Be $codeMandatory
         }
 
-        It 'Has correct parameter type' -Skip:(-not $parameterHelp) {
+        It 'Has correct parameter type' {
             $parameterHelpType | Should -Be $parameter.ParameterType.Name
         }
     }
