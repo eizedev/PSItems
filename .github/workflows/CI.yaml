@@ -1,31 +1,96 @@
 name: CI
+
 on: [push, pull_request]
+
 jobs:
   test:
-    name: Run Tests
+    name: Build / Analyze / Test (${{ matrix.os }})
     runs-on: ${{ matrix.os }}
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Test
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    # Use PowerShell 7 (pwsh) on all runners
+    defaults:
+      run:
         shell: pwsh
-        run: ./build.ps1 -Task Test -Bootstrap
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      # Cache user-scoped PowerShell modules to speed up PSDepend installs
+      - name: Cache PowerShell modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/powershell/Modules
+            ~/Documents/PowerShell/Modules
+            C:\Users\runneradmin\Documents\PowerShell\Modules
+          key: ${{ runner.os }}-psmodules-${{ hashFiles('requirements.psd1') }}
+          restore-keys: |
+            ${{ runner.os }}-psmodules-
+
+      # Install and import module dependencies as defined in requirements.psd1
+      - name: Bootstrap dependencies
+        run: ./build.ps1 -Bootstrap
+
+      # Static analysis via PowerShellBuild (PSScriptAnalyzer under the hood)
+      - name: Analyze (PSScriptAnalyzer)
+        run: ./build.ps1 -Task Analyze -Verbose
+
+      # Unit tests via PowerShellBuild (Pester under the hood)
+      - name: Test (Pester)
+        run: ./build.ps1 -Task Test -Verbose
+
+      # Always upload Pester results so they are available even if tests fail
+      - name: Upload Pester results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults-${{ runner.os }}
+          path: out/testResults.xml
+
   publish:
     name: Publish module
-    # 'v[0-9]+.[0-9]+.[0-9]+' -> v0.1.0
+    # Only run when a tag starting with "v" is pushed (e.g., v0.7.0)
     if: startsWith(github.event.ref, 'refs/tags/v')
-    runs-on: ${{ matrix.os }}
-    strategy:
-      fail-fast: false
-      matrix:
-        os: [windows-latest]
-    steps:
-      - uses: actions/checkout@v4
-      - name: Publish
+    runs-on: windows-latest
+
+    defaults:
+      run:
         shell: pwsh
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      # Cache user-scoped PowerShell modules to speed up PSDepend installs
+      - name: Cache PowerShell modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.local/share/powershell/Modules
+            ~/Documents/PowerShell/Modules
+            C:\Users\runneradmin\Documents\PowerShell\Modules
+          key: windows-psmodules-${{ hashFiles('requirements.psd1') }}
+          restore-keys: |
+            windows-psmodules-
+
+      # Install and import module dependencies as defined in requirements.psd1
+      - name: Bootstrap dependencies
+        run: ./build.ps1 -Bootstrap
+
+      # Sanity checks before publishing
+      - name: Analyze
+        run: ./build.ps1 -Task Analyze -Verbose
+
+      - name: Test
+        run: ./build.ps1 -Task Test -Verbose
+
+      # Publish uses the API key from the environment variable (injected from Secrets)
+      - name: Publish to PowerShell Gallery
         env:
-          PSGALLERY_API_KEY: ${{ secrets.PSGALLERY_API_KEY}}
-        run: ./build.ps1 -Task Publish -Bootstrap
+          PSGALLERY_API_KEY: ${{ secrets.PSGALLERY_API_KEY }}
+        run: ./build.ps1 -Task Publish -Verbose
