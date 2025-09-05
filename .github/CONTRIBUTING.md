@@ -1,62 +1,123 @@
-# How to contribute
+# Contributing to PSItems
 
-Contributions to PSItems are highly encouraged and desired.
-Below are some guidelines that will help make the process as smooth as possible.
+Thanks for helping improve PSItems! The goal is simple, ergonomic, **fast** filesystem utilities.
+PRs that improve performance, reliability, cross‑platform behavior, or docs are very welcome.
 
-## Getting Started
+- File issues: <https://github.com/eizedev/PSItems/issues>
+- Discuss ideas in issues before large changes.
+- Keep PRs focused. Add tests and docs when relevant.
 
-- Make sure you have a [GitHub account](https://github.com/signup/free)
-- Submit a new issue, assuming one does not already exist.
-  - Clearly describe the issue including steps to reproduce when it is a bug.
-  - Make sure you fill in the earliest version that you know has the issue.
-- Fork the repository on GitHub
+---
 
-## Suggesting Enhancements
+## Local development quickstart
 
-I want to know what you think is missing from PSItems and how it can be made better.
+```pwsh
+# 1) Install / update build dependencies (PSDepend, Pester, PSScriptAnalyzer, PowerShellBuild, etc.)
+./build.ps1 -Bootstrap
 
-- When submitting an issue for an enhancement, please be as clear as possible about why you think the enhancement is needed and what the benefit of it would be.
-
-## Making Changes
-
-- From your fork of the repository, create a topic branch where work on your change will take place.
-- To quickly create a topic branch based on master; `git checkout -b my_contribution master`.
-  Please avoid working directly on the `master` branch.
-- Make commits of logical units.
-- Check for unnecessary whitespace with `git diff --check` before committing.
-- Please follow the prevailing code conventions in the repository.
-  Differences in style make the code harder to understand for everyone.
-- Make sure your commit messages are in the proper format.
-
-```
-    Add more cowbell to Get-Something.ps1
-
-    The functionality of Get-Something would be greatly improved if there was a little
-    more 'pizzazz' added to it. I propose a cowbell. Adding more cowbell has been
-    shown in studies to both increase one's mojo, and cement one's status
-    as a rock legend.
+# 2) Lint & test everything
+./build.ps1 -Task Analyze,Test -Verbose
 ```
 
-- Make sure you have added all the necessary Pester tests for your changes.
-- Run _all_ Pester tests in the module to assure nothing else was accidentally broken.
+This project uses **PowerShellBuild** under the hood. The default tasks will stage the module into `Output/`, generate help from Markdown, run **PSScriptAnalyzer**, and execute **Pester** tests.
 
-## Documentation
+---
 
-I am infallible and as such my documenation needs no corectoin.
-In the highly unlikely event that that is _not_ the case, commits to update or add documentation are highly apprecaited.
+## Validate docs locally (platyPS)
 
-## Submitting Changes
+Before pushing, validate that the Markdown help converts to external help (MAML) without errors:
 
-- Push your changes to a topic branch in your fork of the repository.
-- Submit a pull request to the main repository.
-- Once the pull request has been reviewed and accepted, it will be merged with the master branch.
-- Celebrate
+```pwsh
+pwsh -NoProfile -Command "Install-Module platyPS -Scope CurrentUser -Force; New-ExternalHelp -Path 'docs/en-US' -OutputPath 'docs/en-US' -Force -ErrorAction Stop"
+```
 
-## Additional Resources
+**What this does**
+- Installs/updates **platyPS** for the current user.
+- Converts all Markdown help under `docs/en-US` into MAML files in `docs/en-US`.
+- Exits with an error if structural issues are detected (useful for catching CI failures early).
 
-- [General GitHub documentation](https://help.github.com/)
-- [GitHub forking documentation](https://guides.github.com/activities/forking/)
-- [GitHub pull request documentation](https://help.github.com/send-pull-requests/)
-- [GitHub Flow guide](https://guides.github.com/introduction/flow/)
-- [GitHub's guide to contributing to open source projects](https://guides.github.com/activities/contributing-to-open-source/)
+> Tip: If you see “**Expect Heading**” errors, it almost always means a missing `###` subheading or an unclosed code block above the failing line.
 
+---
+
+## Release & Publish (via GitHub Actions)
+
+This project is published **only** through the GitHub Actions pipeline defined in `.github/workflows/CI.yml`.
+Publishing is triggered by **annotated tags** that start with `v` (e.g., `v0.7.0`). The publish job runs on Windows and pushes to the PowerShell Gallery using the repo secret `PSGALLERY_API_KEY`.
+
+> **Prerequisite (one-time):** Add `PSGALLERY_API_KEY` in GitHub → **Settings** → **Secrets and variables** → **Actions** → **New repository secret**.
+
+### Step-by-step
+
+1) **Sync version and changelog**
+   - Edit `PSItems/PSItems.psd1` → set `ModuleVersion = 'X.Y.Z'`.
+   - Edit `CHANGELOG.md`:
+     - Move items from `[Unreleased]` into a new `## [X.Y.Z] - YYYY-MM-DD` section.
+     - Update the compare links at the bottom (e.g., `[Unreleased]` and `[X.Y.Z]`).
+
+2) **(Recommended) Rebuild external help**
+
+```pwsh
+pwsh -NoProfile -Command "Install-Module platyPS -Scope CurrentUser -Force; New-ExternalHelp -Path 'docs/en-US' -OutputPath 'out/en-US' -Force -ErrorAction Stop"
+```
+
+3) **Verify locally**
+
+```pwsh
+pwsh -NoProfile -Command "./build.ps1 -Bootstrap; ./build.ps1 -Task Analyze,Test -Verbose"
+```
+
+4) **Commit & tag**
+
+```pwsh
+git add -A
+git commit -m "chore(release): vX.Y.Z"
+git tag -a vX.Y.Z -m "Release vX.Y.Z"
+```
+
+5) **Push (triggers CI + publish)**
+
+```pwsh
+git push origin HEAD
+git push origin vX.Y.Z
+```
+
+6) **Watch the pipeline**
+- CI runs on Windows, macOS, and Linux (**Analyze + Test**).
+- **Publish** runs on Windows only for tags that start with `v` and publishes to the PowerShell Gallery using `PSGALLERY_API_KEY`.
+
+7) **Sanity check after publish**
+
+```pwsh
+pwsh -NoProfile -Command "Find-Module PSItems -Repository PSGallery | Select-Object -First 1 Name,Version"
+# Optionally install the fresh version to verify:
+# pwsh -NoProfile -Command "Install-Module PSItems -Scope CurrentUser -Force; (Get-Module PSItems -ListAvailable | Sort-Object Version -Descending | Select-Object -First 1).Version"
+```
+
+### Example: releasing **v0.7.0**
+
+```pwsh
+# 1) Update:
+# - PSItems/PSItems.psd1 → ModuleVersion = '0.7.0'
+# - CHANGELOG.md → new "## [0.7.0] - 2025-09-05" section + updated compare links
+
+# 2) Rebuild help (optional but recommended)
+pwsh -NoProfile -Command "Install-Module platyPS -Scope CurrentUser -Force; New-ExternalHelp -Path 'docs/en-US' -OutputPath 'out/en-US' -Force -ErrorAction Stop"
+
+# 3) Verify
+pwsh -NoProfile -Command "./build.ps1 -Bootstrap; ./build.ps1 -Task Analyze,Test -Verbose"
+
+# 4) Commit & tag
+git add -A
+git commit -m "chore(release): v0.7.0"
+git tag -a v0.7.0 -m "Release v0.7.0"
+
+# 5) Push (triggers CI + publish)
+git push origin HEAD
+git push origin v0.7.0
+```
+
+**Notes**
+- The tag must be `vX.Y.Z` to trigger the publish job.
+- The pipeline uploads the Pester console log and (optionally) JUnit XML test results as artifacts.
+- If the changelog version and `ModuleVersion` differ, tests will fail by design.
