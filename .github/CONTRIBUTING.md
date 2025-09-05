@@ -139,3 +139,61 @@ git push origin v0.7.0
 - The tag must be `vX.Y.Z` to trigger the publish job.
 - The pipeline uploads the Pester console log and (optionally) JUnit XML test results as artifacts.
 - If the changelog version and `ModuleVersion` differ, tests will fail by design.
+
+## Developing with the Dev Container
+
+This project ships a ready‑to‑use **Dev Container** for a consistent, cross‑platform setup.
+
+### Prerequisites
+- **Docker** (Docker Desktop on Windows/macOS; Docker Engine on Linux)
+- **Visual Studio Code**
+- **Dev Containers** extension (`ms-vscode-remote.remote-containers`)
+- (Windows) Recommended: **WSL2**
+
+### Open in the Dev Container
+
+1. Open the repository in VS Code.
+2. Press `F1` → **Dev Containers: Reopen in Container**.
+3. VS Code builds the image from `Dockerfile` and creates the container using `.devcontainer/devcontainer.json`.
+
+> The first run can take a few minutes (image build + dependency restore).
+
+### What the container does
+- Uses the official `mcr.microsoft.com/powershell` base image (pwsh 7+).
+- Installs recommended VS Code extensions (PowerShell, markdownlint).
+- Sets terminal shell to **pwsh**.
+- Runs post‑create bootstrap: `./build.ps1 -Task Init -Bootstrap` (install build/test deps).
+
+### Common tasks inside the container
+```pwsh
+# Run code style / static analysis
+./build.ps1 -Task Analyze -Verbose
+
+# Run tests (Pester via PowerShellBuild)
+./build.ps1 -Task Test -Verbose
+
+# Build & validate help (platyPS)
+pwsh -NoProfile -Command "Install-Module platyPS -Scope CurrentUser -Force; update-MarkdownHelpModule -Path 'docs/en-US' -Module 'PSItems'"
+pwsh -NoProfile -Command "New-ExternalHelp -Path 'docs/en-US' -OutputPath 'docs/en-US' -Force"
+```
+
+### Update or reset the container
+- **Rebuild** after changing `Dockerfile`/`devcontainer.json` → `F1` → **Dev Containers: Rebuild Container**.
+- **Clean rebuild** (no cache) → `F1` → **Dev Containers: Rebuild and Reopen in Container**.
+
+### Tips
+- Windows + WSL2: store the repo under your Linux home (`/home/<you>/repo`) for best I/O performance.
+- If you need environment secrets locally, add them to **.devcontainer/devcontainer.json** under `containerEnv` (do **not** commit real secrets).
+
+### Troubleshooting
+- **Docker not running** → start Docker Desktop / service, then retry **Reopen in Container**.
+- **Proxy / TLS errors** when restoring modules → configure Docker/OS proxy and retry.
+- **Stale tools** after edits → use **Rebuild Container**.
+- **Module cache is slow** → this setup uses user‑scoped modules inside the container; caches are isolated per container.
+
+---
+
+**Related files**
+- `.devcontainer/devcontainer.json` — Dev Container definition (settings, extensions, post‑create).
+- `Dockerfile` — base image and OS packages for the environment.
+
