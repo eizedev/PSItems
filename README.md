@@ -207,12 +207,12 @@ PRs that improve performance, reliability, cross-platform behavior, or docs are 
 Before pushing, validate that the Markdown help converts to external help (MAML) without errors:
 
 ```pwsh
-pwsh -NoProfile -Command "Install-Module platyPS -Scope CurrentUser -Force; New-ExternalHelp -Path 'docs/en-US' -OutputPath 'out/en-US' -Force -ErrorAction Stop"
+pwsh -NoProfile -Command "Install-Module platyPS -Scope CurrentUser -Force; New-ExternalHelp -Path 'docs/en-US' -OutputPath 'docs/en-US' -Force -ErrorAction Stop"
 ```
 
 **What this does**
 - Installs/updates **platyPS** for the current user.
-- Converts all Markdown help under `docs/en-US` into MAML files in `out/en-US`.
+- Converts all Markdown help under `docs/en-US` into MAML files in `docs/en-US`.
 - Exits with an error if structural issues are detected (useful for catching CI failures early).
 
 > Tip: If you see “**Expect Heading**” errors, it almost always means a missing `###` subheading or an unclosed code block above the failing line.

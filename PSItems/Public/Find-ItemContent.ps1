@@ -205,8 +205,8 @@
 
     try {
         # if more than one string was given use foreach (so if input $Name is a string array)
-        foreach ($input in $Name) {
-            foreach ($item in [System.IO.Directory]::$($Method)($path, $input, $EnumerationOptions)) {
+        foreach ($inputName in $Name) {
+            foreach ($item in [System.IO.Directory]::$($Method)($path, $inputName, $EnumerationOptions)) {
                 $file = [string]::new($item)
                 # Read each line using streamreader (ReadOnly Filestream) and use regex to find given pattern in each line.
                 # Output filename and matched line

@@ -204,9 +204,9 @@ function Get-ItemSize {
     $ItemSizeList = [System.Collections.Generic.List[Int64]]::new()
     try {
         # if more than one string was given use foreach (so if input $Name is a string array)
-        foreach ($input in $Name) {
+        foreach ($inputName in $Name) {
             $list = [System.Collections.Generic.List[Int64]]::new()
-            foreach ($item in [System.IO.Directory]::$($Method)($path, $input, $EnumerationOptions)) {
+            foreach ($item in [System.IO.Directory]::$($Method)($path, $inputName, $EnumerationOptions)) {
                 Write-Verbose $item
                 # Convert string of path to FileInfo object and calculate size (sum)
                 #$ItemSize = $ItemSize + ([System.IO.FileInfo]::new($item) | Measure-Object -Property Length -Sum -ErrorAction Stop).Sum
