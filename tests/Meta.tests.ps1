@@ -8,9 +8,9 @@ BeforeAll {
     $projectRoot = $ENV:BHProjectPath
     if (-not $projectRoot) { $projectRoot = $PSScriptRoot }
 
-    # Exclude common generated/third-party dirs
-    $excludeDirs = @('\.git', '\.github', '\.vscode', '\out', '\Output', '\bin', '\obj', '\res')
-    $excludeRegex = [regex]::new('(' + ($excludeDirs -join '|') + ')(\\|/)', 'IgnoreCase')
+    # Exclude common generated/third-party dirs; path-sep agnostic
+    $excludePattern = '([\\/])(\.git|\.github|\.vscode|out|Output|bin|obj|res)([\\/])'
+    $excludeRegex = [regex]::new($excludePattern, 'IgnoreCase')
 
     $allTextFiles = Get-TextFilesList $projectRoot | Where-Object { -not $excludeRegex.IsMatch($_.FullName) }
 
