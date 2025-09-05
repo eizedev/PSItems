@@ -15,9 +15,9 @@ Simple and fast function for finding any item on the filesystem (similar to `fin
 
 ```
 Find-Item [[-Path] <String>] [[-Name] <String[]>] [-Iname <String[]>] [-Type <String>] [-Recurse]
- [-IgnoreInaccessible <Boolean>] [-As <String>] [-MatchCasing <String>] [-AttributesToSkip <Object[]>]
- [-MatchType <String>] [-Depth <Int32>] [-MinDepth <Int32>] [-IncludeSpecialDirectories]
- [<CommonParameters>]
+ [-IgnoreInaccessible <Boolean>] [-As <String>] [-MatchCasing <MatchCasing>] [-AttributesToSkip <Object[]>]
+ [-MatchType <MatchType>] [-Depth <Int32>] [-MinDepth <Int32>] [-IncludeSpecialDirectories]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -103,7 +103,7 @@ Required: False
 Position: 1
 Default value: $pwd
 Accept pipeline input: False
-Accept wildcard characters: True
+Accept wildcard characters: False
 ```
 
 ### -Name
@@ -220,9 +220,10 @@ Controls case sensitivity of pattern matching (maps to `EnumerationOptions.Match
 `PlatformDefault` = case-insensitive on Windows, case-sensitive on Linux/macOS.
 
 ```yaml
-Type: String
+Type: MatchCasing
 Parameter Sets: (All)
 Aliases:
+Accepted values: PlatformDefault, CaseSensitive, CaseInsensitive
 
 Required: False
 Position: Named
@@ -253,9 +254,10 @@ Accept wildcard characters: False
 Pattern matching engine (maps to `EnumerationOptions.MatchType`): `Simple` or `Win32`.
 
 ```yaml
-Type: String
+Type: MatchType
 Parameter Sets: (All)
 Aliases:
+Accepted values: Simple, Win32
 
 Required: False
 Position: Named
@@ -310,6 +312,21 @@ Aliases:
 Required: False
 Position: Named
 Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+Default PowerShell7 progressaction
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
+
+Required: False
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

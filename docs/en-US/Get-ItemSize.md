@@ -17,7 +17,7 @@ Simple and fast function for getting the size of any item on the filesystem (lik
 Get-ItemSize [[-Path] <String>] [[-Name] <String[]>] [-Type <String>] [-Recurse]
  [-IgnoreInaccessible <Boolean>] [-MatchCasing <String>] [-AttributesToSkip <String[]>] [-MatchType <String>]
  [-Depth <Int32>] [-IncludeSpecialDirectories] [-Format <String>] [-Decimals <Int32>] [-FormatRaw] [-AsRaw]
- [<CommonParameters>]
+ [-ProgressAction <ActionPreference>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -314,6 +314,21 @@ Aliases:
 Required: False
 Position: Named
 Default value: False
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -ProgressAction
+Default PowerShell7 progressaction
+
+```yaml
+Type: ActionPreference
+Parameter Sets: (All)
+Aliases: proga
+
+Required: False
+Position: Named
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
