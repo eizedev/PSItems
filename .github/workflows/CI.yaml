@@ -5,6 +5,7 @@
 # - Captures the full Pester console output as an artifact on every run.
 # - Optionally uploads a Pester XML; upload is conditional to avoid warnings when XML is not produced.
 # - Publishes to PowerShell Gallery when a tag starting with "v" is pushed.
+# - NEW: Checkout now fetches full history + tags so Git-tag tests can run in CI.
 
 name: CI
 
@@ -25,9 +26,12 @@ jobs:
         shell: pwsh
 
     steps:
-      # Checkout repository
+      # Checkout repository (fetch full history + tags for Git-tagging tests)
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0         # required so HEAD~1..HEAD and tag lookups work
+          fetch-tags: true       # required so `git tag --points-at HEAD` can see tags
 
       # Cache user-scoped PowerShell modules to speed up PSDepend installs
       - name: Cache PowerShell modules
@@ -127,9 +131,12 @@ jobs:
         shell: pwsh
 
     steps:
-      # Checkout repository
+      # Checkout repository (fetch full history + tags; required for tag-aware tests and packaging)
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+          fetch-tags: true
 
       # Cache user-scoped PowerShell modules to speed up PSDepend installs
       - name: Cache PowerShell modules
