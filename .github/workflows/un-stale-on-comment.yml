@@ -1,0 +1,33 @@
+﻿# .github/workflows/un-stale-on-comment.yml
+name: Unmark stale on comment
+
+on:
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+  pull_request_review:
+    types: [submitted]
+
+permissions:
+  contents: read
+  issues: write          # needed to remove labels on issues/PRs
+  pull-requests: write   # label operations on PRs
+
+jobs:
+  unmark-stale:
+    name: Remove stale labels on activity
+    runs-on: ubuntu-latest
+    # Optional: ignore bot comments; remove this line if you want bots to un-stale as well
+    if: ${{ !endsWith(github.actor, '[bot]') }}
+
+    steps:
+      # No checkout required
+      - name: Remove stale labels
+        uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          # Any of these present labels will be removed
+          labels: |
+            stale
+            no-issue-activity
+            no-pr-activity
