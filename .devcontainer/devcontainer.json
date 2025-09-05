@@ -1,26 +1,32 @@
+// .devcontainer/devcontainer.json
 {
-    "name": "PowerShell",
+    "name": "PSItems (PowerShell 7)",
+    // Build from local Dockerfile for reproducibility (pin in Dockerfile)
     "dockerFile": "Dockerfile",
-    // "image": "mcr.microsoft.com/powershell",
-
-    // Set *default* container specific settings.json values on container create.
-    "settings": {
-        "terminal.integrated.shell.linux": "/usr/bin/pwsh"
+    // VS Code customizations inside the container
+    "customizations": {
+        "vscode": {
+            // ✅ Move editor/terminal settings here (recommended schema)
+            "settings": {
+                // Use PowerShell as the default integrated terminal on Linux
+                "terminal.integrated.defaultProfile.linux": "pwsh",
+                // Optional: keep PowerShell extension console from popping up on start
+                "powershell.integratedConsole.showOnStartup": false
+            },
+            // Recommended extensions
+            "extensions": [
+                "ms-vscode.powershell",
+                "davidanson.vscode-markdownlint"
+            ]
+        }
     },
-
-    // Add the IDs of extensions you want installed when the container is created.
-    "extensions": [
-        "ms-vscode.powershell",
-        "davidanson.vscode-markdownlint"
-    ],
-
-    // Use 'forwardPorts' to make a list of ports inside the container available locally.
-    // "forwardPorts": [],
-
-    // Bootstrap build modules
-    "postCreateCommand": "pwsh -c './build.ps1 -Task Init -Bootstrap'",
-
-    // Uncomment to connect as a non-root user. See https://aka.ms/vscode-remote/containers/non-root.
-    // "remoteUser": "vscode"
+    // Bootstrap module dependencies on first create (kept light)
+    "postCreateCommand": "pwsh -NoProfile -Command \"./build.ps1 -Bootstrap\"",
+    // Run as the non-root user created in the Dockerfile
+    "remoteUser": "vscode",
+    // Small quality-of-life env inside the container
+    "containerEnv": {
+        "POWERSHELL_TELEMETRY_OPTOUT": "1",
+        "POWERSHELL_UPDATECHECK": "Off"
+    }
 }
-

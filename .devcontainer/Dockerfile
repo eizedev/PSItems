@@ -1,30 +1,39 @@
-#-------------------------------------------------------------------------------------------------------------
-# Copyright (c) Microsoft Corporation. All rights reserved.
-# Licensed under the MIT License. See https://go.microsoft.com/fwlink/?linkid=2090316 for license information.
-#-------------------------------------------------------------------------------------------------------------
+# .devcontainer/Dockerfile
+# -------------------------------------------------------------------------------------------------------------
+# Base image: pin to a specific PowerShell + distro for reproducibility.
+# See tags: https://mcr.microsoft.com/en-us/product/powershell/tags
+# Example tag below targets PowerShell 7.4 on Ubuntu 22.04 (Jammy).
+# -------------------------------------------------------------------------------------------------------------
 
-FROM mcr.microsoft.com/powershell:latest
+FROM mcr.microsoft.com/powershell:7.4-ubuntu-22.04
 
-# This Dockerfile adds a non-root user with sudo access. Use the "remoteUser"
-# property in devcontainer.json to use it. On Linux, the container user's GID/UIDs
-# will be updated to match your local UID/GID (when using the dockerFile property).
-# See https://aka.ms/vscode-remote/containers/non-root-user for details.
+# Create a non-root user (recommended for devcontainers)
 ARG USERNAME=vscode
 ARG USER_UID=1000
-ARG USER_GID=$USER_UID
+ARG USER_GID=${USER_UID}
 
-# install git iproute2, process tools
-RUN apt-get update && apt-get -y install git openssh-client less iproute2 procps \
-    # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
-    && groupadd --gid $USER_GID $USERNAME \
-    && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
-    # [Optional] Add sudo support for the non-root user
-    && apt-get install -y sudo \
-    && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME\
-    && chmod 0440 /etc/sudoers.d/$USERNAME \
-    #
-    # Clean up
+ENV DEBIAN_FRONTEND=noninteractive \
+    POWERSHELL_TELEMETRY_OPTOUT=1 \
+    POWERSHELL_UPDATECHECK=Off
+
+# Install common tools and set up the non-root user with passwordless sudo
+RUN apt-get update \
+    && apt-get -y install --no-install-recommends \
+    git openssh-client less iproute2 procps ca-certificates sudo \
+    && groupadd --gid ${USER_GID} ${USERNAME} \
+    && useradd -s /bin/bash --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} \
+    && echo "${USERNAME} ALL=(root) NOPASSWD:ALL" > /etc/sudoers.d/${USERNAME} \
+    && chmod 0440 /etc/sudoers.d/${USERNAME} \
     && apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
+# OPTIONAL: Preinstall core build modules to speed up first run (cached in image layer).
+# Comment out if you prefer postCreate-only installs.
+# - PSDepend pulls the rest per requirements.psd1 during your bootstrap step.
+RUN pwsh -NoLogo -NoProfile -Command \
+    "Set-PSRepository -Name PSGallery -InstallationPolicy Trusted; \
+    Install-Module PSDepend -Scope AllUsers -Force -ErrorAction Stop"
+
+# Use the non-root user by default (matches devcontainer.json 'remoteUser')
+USER ${USERNAME}
