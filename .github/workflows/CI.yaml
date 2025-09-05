@@ -2,7 +2,8 @@
 # - Uses PowerShell 7 (pwsh) everywhere.
 # - Caches user-scoped PowerShell modules to speed up dependency installs.
 # - Runs static analysis and Pester tests via PowerShellBuild/psake.
-# - Captures Pester console output and XML test results as artifacts.
+# - Captures the full Pester console output as an artifact on every run.
+# - Optionally uploads a Pester XML; upload is conditional to avoid warnings when XML is not produced.
 # - Publishes to PowerShell Gallery when a tag starting with "v" is pushed.
 
 name: CI
@@ -53,11 +54,12 @@ jobs:
         run: New-Item -ItemType Directory -Force -Path out | Out-Null
 
       # Run tests and tee the full console log into out/pester-console.txt
+      # Note: PowerShellBuild writes a GitHub job summary automatically; it does not emit XML by default.
       - name: Test (Pester)
         run: ./build.ps1 -Task Test -Verbose *>&1 | Tee-Object -FilePath out/pester-console.txt
 
-      # Normalize Pester XML path: copy the first discovered testResults*.xml to out/testResults.xml
-      # This covers both PowerShellBuild's default location under Output/** and any direct out/** writes.
+      # Normalize Pester XML path if any producer created it:
+      # Copy the first discovered testResults*.xml to out/testResults.xml (optional artifact).
       - name: Collect Pester results
         if: always()
         run: |
@@ -71,19 +73,18 @@ jobs:
             Copy-Item -LiteralPath $first.FullName -Destination $dest -Force
             Write-Host "Copied test results: $($first.FullName) -> $dest"
           } else {
-            Write-Warning "No testResults*.xml found under ./out or ./Output."
+            Write-Warning "No testResults*.xml found under ./out or ./Output (this is expected when XML output is not enabled)."
           }
 
-      # Upload the Pester XML so it’s available from the run artifacts
-      - name: Upload Pester results
-        if: always()
+      # Upload the Pester XML only if it exists to avoid artifact warnings.
+      - name: Upload Pester results (XML)
+        if: ${{ always() && hashFiles('out/testResults.xml') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: TestResults-${{ runner.os }}
           path: out/testResults.xml
-          if-no-files-found: warn
 
-      # Upload the full Pester console log
+      # Upload the full Pester console log (always useful for debugging)
       - name: Upload Pester console log
         if: always()
         uses: actions/upload-artifact@v4
@@ -158,7 +159,7 @@ jobs:
       - name: Test
         run: ./build.ps1 -Task Test -Verbose *>&1 | Tee-Object -FilePath out/pester-console.txt
 
-      # Normalize Pester XML path: copy the first discovered testResults*.xml to out/testResults.xml
+      # Normalize Pester XML path if any producer created it (same logic as in the test job)
       - name: Collect Pester results
         if: always()
         run: |
@@ -172,17 +173,16 @@ jobs:
             Copy-Item -LiteralPath $first.FullName -Destination $dest -Force
             Write-Host "Copied test results: $($first.FullName) -> $dest"
           } else {
-            Write-Warning "No testResults*.xml found under ./out or ./Output."
+            Write-Warning "No testResults*.xml found under ./out or ./Output (this is expected when XML output is not enabled)."
           }
 
-      # Upload the Pester XML and console log for the publish job too
-      - name: Upload Pester results
-        if: always()
+      # Upload artifacts for the publish job as well (conditional XML upload)
+      - name: Upload Pester results (XML)
+        if: ${{ always() && hashFiles('out/testResults.xml') != '' }}
         uses: actions/upload-artifact@v4
         with:
           name: TestResults-publish
           path: out/testResults.xml
-          if-no-files-found: warn
 
       - name: Upload Pester console log
         if: always()
