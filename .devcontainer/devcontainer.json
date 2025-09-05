@@ -6,7 +6,7 @@
     // VS Code customizations inside the container
     "customizations": {
         "vscode": {
-            // ✅ Move editor/terminal settings here (recommended schema)
+            // Move editor/terminal settings here (recommended schema)
             "settings": {
                 // Use PowerShell as the default integrated terminal on Linux
                 "terminal.integrated.defaultProfile.linux": "pwsh",
