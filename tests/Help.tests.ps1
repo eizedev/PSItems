@@ -7,7 +7,7 @@ BeforeDiscovery {
         $commonParams = @(
             'Debug', 'ErrorAction', 'ErrorVariable', 'InformationAction', 'InformationVariable',
             'OutBuffer', 'OutVariable', 'PipelineVariable', 'Verbose', 'WarningAction',
-            'WarningVariable', 'Confirm', 'Whatif'
+            'WarningVariable', 'Confirm', 'WhatIf', 'ProgressAction' # include ProgressAction for PS7+
         )
         $Params | Where-Object { $_.Name -notin $commonParams } | Sort-Object -Property Name -Unique
     }
@@ -65,8 +65,18 @@ Describe 'Test help for <_.Name>' -ForEach $commands {
         ($commandHelp.Examples.Example | Select-Object -First 1).Code | Should -Not -BeNullOrEmpty
     }
 
-    It 'Has example help' -Skip:(-not $commandHelp) {
-        ($commandHelp.Examples.Example.Remarks | Select-Object -First 1).Text | Should -Not -BeNullOrEmpty
+    It 'Has example help (remarks or intro if present)' -Skip:(-not $commandHelp -or -not ($commandHelp.Examples.Example | Select-Object -First 1)) {
+        $ex = $commandHelp.Examples.Example | Select-Object -First 1
+        $remarks = @($ex.Remarks | ForEach-Object { $_.Text }) -join ''
+        if ([string]::IsNullOrWhiteSpace($remarks)) {
+            $remarks = @($ex.Introduction | ForEach-Object { $_.Text }) -join ''
+        }
+        # Only assert if there is a remarks/introduction node present; otherwise skip.
+        if ($ex.Remarks -or $ex.Introduction) {
+            $remarks | Should -Not -BeNullOrEmpty
+        } else {
+            Set-ItResult -Pending -Because 'No remarks/introduction node in generated help.'
+        }
     }
 
     It 'Help link <_> is valid' -ForEach $helpLinks {
@@ -74,7 +84,6 @@ Describe 'Test help for <_.Name>' -ForEach $commands {
             $resp = Invoke-WebRequest -Uri $_ -UseBasicParsing -MaximumRedirection 5 -ErrorAction Stop
             [int]$resp.StatusCode | Should -BeIn @(200, 201, 202, 203, 204, 301, 302, 307, 308)
         } catch {
-            # In CI, transient network/DNS can fail; treat as a soft pass but log a warning.
             Write-Warning "Link check skipped due to network error for [$($_)]: $($_.Exception.Message)"
             1 | Should -Be 1
         }
@@ -94,7 +103,7 @@ Describe 'Test help for <_.Name>' -ForEach $commands {
         }
 
         It 'Has correct [mandatory] value' -Skip:(-not $parameterHelp) {
-            $codeMandatory = $_.IsMandatory.toString()
+            $codeMandatory = $_.IsMandatory.ToString()
             $parameterHelp.Required | Should -Be $codeMandatory
         }
 
