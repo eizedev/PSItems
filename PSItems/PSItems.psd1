@@ -108,7 +108,7 @@
             ProjectUri   = 'https://github.com/eizedev/PSItems'
 
             # A URL to an icon representing this module.
-            IconUri      = 'https://github.com/eizedev/PSItems/blob/master/res/logo.png'
+            IconUri      = 'https://raw.githubusercontent.com/eizedev/PSItems/master/res/img/psitems-logo.png'
 
             # ReleaseNotes of this module
             ReleaseNotes = 'https://github.com/eizedev/PSItems/blob/master/CHANGELOG.md'
