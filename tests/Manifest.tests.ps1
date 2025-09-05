@@ -8,12 +8,8 @@ BeforeAll {
     $manifestData = Test-ModuleManifest -Path $outputManifestPath -Verbose:$false -ErrorAction Stop -WarningAction SilentlyContinue
 
     $changelogPath = Join-Path -Path $env:BHProjectPath -Child 'CHANGELOG.md'
-    $changelogVersion = Get-Content $changelogPath | ForEach-Object {
-        if ($_ -match '^##\s\[(?<Version>(\d+\.){1,3}\d+)\]') {
-            $matches.Version
-            break
-        }
-    }
+    $clMatch = Select-String -Path $changelogPath -Pattern '^\#\#\s\[(\d+\.\d+\.\d+)\]' -AllMatches | Select-Object -First 1
+    $changelogVersion = if ($clMatch -and $clMatch.Matches.Count -gt 0) { $clMatch.Matches[0].Groups[1].Value } else { $null }
 
     $script:manifest = $null
 }
