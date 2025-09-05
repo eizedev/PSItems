@@ -1,3 +1,10 @@
+# CI pipeline for PSItems: build, analyze, test on Windows/Linux/macOS and publish on tag.
+# - Uses PowerShell 7 (pwsh) everywhere.
+# - Caches user-scoped PowerShell modules to speed up dependency installs.
+# - Runs static analysis and Pester tests via PowerShellBuild/psake.
+# - Captures Pester console output and XML test results as artifacts.
+# - Publishes to PowerShell Gallery when a tag starting with "v" is pushed.
+
 name: CI
 
 on: [push, pull_request]
@@ -17,6 +24,7 @@ jobs:
         shell: pwsh
 
     steps:
+      # Checkout repository
       - name: Checkout
         uses: actions/checkout@v5
 
@@ -40,15 +48,33 @@ jobs:
       - name: Analyze (PSScriptAnalyzer)
         run: ./build.ps1 -Task Analyze -Verbose
 
-      # Ensure output folder exists before tests write artifacts (XML, logs)
+      # Ensure the out/ directory exists for logs and test artifacts
       - name: Prepare output folder
         run: New-Item -ItemType Directory -Force -Path out | Out-Null
 
-      # Unit tests via PowerShellBuild (Pester under the hood), capture console log
+      # Run tests and tee the full console log into out/pester-console.txt
       - name: Test (Pester)
         run: ./build.ps1 -Task Test -Verbose *>&1 | Tee-Object -FilePath out/pester-console.txt
 
-      # Always upload Pester results so they are available even if tests fail
+      # Normalize Pester XML path: copy the first discovered testResults*.xml to out/testResults.xml
+      # This covers both PowerShellBuild's default location under Output/** and any direct out/** writes.
+      - name: Collect Pester results
+        if: always()
+        run: |
+          $dest = 'out/testResults.xml'
+          $candidates = @()
+          $candidates += Get-ChildItem -Path 'out'    -Recurse -Filter 'testResults*.xml' -ErrorAction SilentlyContinue
+          $candidates += Get-ChildItem -Path 'Output' -Recurse -Filter 'testResults*.xml' -ErrorAction SilentlyContinue
+          if ($candidates) {
+            $first = $candidates | Select-Object -First 1
+            New-Item -ItemType Directory -Force -Path (Split-Path $dest) | Out-Null
+            Copy-Item -LiteralPath $first.FullName -Destination $dest -Force
+            Write-Host "Copied test results: $($first.FullName) -> $dest"
+          } else {
+            Write-Warning "No testResults*.xml found under ./out or ./Output."
+          }
+
+      # Upload the Pester XML so it’s available from the run artifacts
       - name: Upload Pester results
         if: always()
         uses: actions/upload-artifact@v4
@@ -57,7 +83,7 @@ jobs:
           path: out/testResults.xml
           if-no-files-found: warn
 
-      # Also upload the captured Pester console output (for debugging)
+      # Upload the full Pester console log
       - name: Upload Pester console log
         if: always()
         uses: actions/upload-artifact@v4
@@ -65,6 +91,29 @@ jobs:
           name: TestConsole-${{ runner.os }}
           path: out/pester-console.txt
           if-no-files-found: ignore
+
+      # Add a brief summary to the run (parses counts from the Pester console log)
+      - name: Summarize Pester results
+        if: always()
+        run: |
+          $summary = @()
+          $summary += "## Pester summary ($env:RUNNER_OS)"
+          $summary += ""
+          if (Test-Path out/pester-console.txt) {
+            $log = Get-Content out/pester-console.txt -Raw
+            if ($log -match 'Tests\s+completed\s+in.*?\nTests\s+Passed:\s*(\d+),\s*Failed:\s*(\d+),\s*Skipped:\s*(\d+),\s*Inconclusive:\s*(\d+),') {
+              $summary += "- Passed: $($Matches[1])"
+              $summary += "- Failed: $($Matches[2])"
+              $summary += "- Skipped: $($Matches[3])"
+              $summary += "- Inconclusive: $($Matches[4])"
+            } else {
+              $summary += "_Could not parse counts from console log._"
+            }
+          } else {
+            $summary += "_No console log found._"
+          }
+          $summaryText = $summary -join "`n"
+          $summaryText | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
 
   publish:
     name: Publish module
@@ -77,6 +126,7 @@ jobs:
         shell: pwsh
 
     steps:
+      # Checkout repository
       - name: Checkout
         uses: actions/checkout@v5
 
@@ -100,14 +150,32 @@ jobs:
       - name: Analyze
         run: ./build.ps1 -Task Analyze -Verbose
 
-      # Ensure output folder exists before tests write artifacts (XML, logs)
+      # Ensure the out/ directory exists for logs and test artifacts
       - name: Prepare output folder
         run: New-Item -ItemType Directory -Force -Path out | Out-Null
 
+      # Run tests and tee the full console log into out/pester-console.txt
       - name: Test
         run: ./build.ps1 -Task Test -Verbose *>&1 | Tee-Object -FilePath out/pester-console.txt
 
-      # Upload test artifacts from publish job too (useful when publish fails after tests)
+      # Normalize Pester XML path: copy the first discovered testResults*.xml to out/testResults.xml
+      - name: Collect Pester results
+        if: always()
+        run: |
+          $dest = 'out/testResults.xml'
+          $candidates = @()
+          $candidates += Get-ChildItem -Path 'out'    -Recurse -Filter 'testResults*.xml' -ErrorAction SilentlyContinue
+          $candidates += Get-ChildItem -Path 'Output' -Recurse -Filter 'testResults*.xml' -ErrorAction SilentlyContinue
+          if ($candidates) {
+            $first = $candidates | Select-Object -First 1
+            New-Item -ItemType Directory -Force -Path (Split-Path $dest) | Out-Null
+            Copy-Item -LiteralPath $first.FullName -Destination $dest -Force
+            Write-Host "Copied test results: $($first.FullName) -> $dest"
+          } else {
+            Write-Warning "No testResults*.xml found under ./out or ./Output."
+          }
+
+      # Upload the Pester XML and console log for the publish job too
       - name: Upload Pester results
         if: always()
         uses: actions/upload-artifact@v4
