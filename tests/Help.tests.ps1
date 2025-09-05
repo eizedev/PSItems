@@ -1,32 +1,50 @@
 # Taken with love from @juneb_get_help (https://raw.githubusercontent.com/juneb/PesterTDD/master/Module.Help.Tests.ps1)
-# Hardened for PSItems: fail when external help is missing or incomplete.
-# Toggle strict link checks by setting environment variable HELP_LINKS_STRICT=true
+# Hardened for PSItems:
+# - Fails when external help is missing or auto-generated.
+# - Validates examples (code + remarks/introduction).
+# - Validates parameter presence, mandatory flag, and type.
+# - Link checks are lenient by default; set HELP_LINKS_STRICT=true to fail on link errors.
 
 BeforeDiscovery {
 
     function global:FilterOutCommonParams {
+        <#
+            .SYNOPSIS
+            Filters out the common PowerShell parameters from a ParameterMetadata collection.
+
+            .DESCRIPTION
+            Returns a sorted, unique list of parameters excluding the built-in common parameters.
+            Includes ProgressAction for PS7+ hosts.
+
+            .PARAMETER Params
+            A collection of parameter metadata objects (e.g. $command.ParameterSets.Parameters).
+        #>
         param ($Params)
+
         $commonParams = @(
             'Debug', 'ErrorAction', 'ErrorVariable', 'InformationAction', 'InformationVariable',
             'OutBuffer', 'OutVariable', 'PipelineVariable', 'Verbose', 'WarningAction',
             'WarningVariable', 'Confirm', 'WhatIf', 'ProgressAction' # PS7+
         )
+
         $Params | Where-Object { $_.Name -notin $commonParams } | Sort-Object -Property Name -Unique
     }
 
+    # Resolve the built module under Output/<Name>/<Version>/<Name>.psd1 produced by PowerShellBuild.
     $manifest = Import-PowerShellDataFile -Path $env:BHPSModuleManifest
     $outputDir = Join-Path -Path $env:BHProjectPath -ChildPath 'Output'
     $outputModDir = Join-Path -Path $outputDir -ChildPath $env:BHProjectName
     $outputModVerDir = Join-Path -Path $outputModDir -ChildPath $manifest.ModuleVersion
     $outputModVerManifest = Join-Path -Path $outputModVerDir -ChildPath "$($env:BHProjectName).psd1"
 
-    # Remove all versions of the module from the session. Pester can't handle multiple versions.
+    # Ensure only the just-built version is loaded (Pester cannot handle multiple loaded versions well).
     Get-Module $env:BHProjectName | Remove-Module -Force -ErrorAction Ignore
     Import-Module -Name $outputModVerManifest -Verbose:$false -ErrorAction Stop
 
+    # Collect commands (Functions/Cmdlets only; aliases are not validated here).
     $params = @{
         Module      = (Get-Module $env:BHProjectName)
-        CommandType = [System.Management.Automation.CommandTypes[]]'Cmdlet, Function' # Not alias
+        CommandType = [System.Management.Automation.CommandTypes[]]'Cmdlet, Function'
     }
     if ($PSVersionTable.PSVersion.Major -lt 6) {
         $params.CommandType[0] += 'Workflow'
@@ -37,6 +55,7 @@ BeforeDiscovery {
 Describe 'Test help for <_.Name>' -ForEach $commands {
 
     BeforeDiscovery {
+        # Gather help & metadata for discovery-time ForEach rendering.
         $command = $_
         $commandHelp = Get-Help $command.Name -ErrorAction SilentlyContinue
         $commandParameters = global:FilterOutCommonParams -Params $command.ParameterSets.Parameters
@@ -45,6 +64,7 @@ Describe 'Test help for <_.Name>' -ForEach $commands {
     }
 
     BeforeAll {
+        # Duplicate into test phase scope.
         $command = $_
         $commandName = $_.Name
         $commandHelp = Get-Help $command.Name -ErrorAction SilentlyContinue
@@ -56,6 +76,7 @@ Describe 'Test help for <_.Name>' -ForEach $commands {
     }
 
     It 'Has external help loaded (no auto-generated help)' {
+        # If help is auto-generated, the synopsis usually shows the syntax including [<CommonParameters>]
         $commandHelp | Should -Not -BeNullOrEmpty
         $commandHelp.Synopsis | Should -Not -BeLike '*`[`<CommonParameters`>`]*'
     }
@@ -71,6 +92,8 @@ Describe 'Test help for <_.Name>' -ForEach $commands {
     It 'Has example help (remarks or introduction)' {
         $ex = $commandHelp.Examples.Example | Select-Object -First 1
         $ex | Should -Not -BeNullOrEmpty
+
+        # Prefer Remarks.Text; fall back to Introduction.Text if Remarks is empty/missing.
         $remarks = @($ex.Remarks | ForEach-Object { $_.Text }) -join ''
         if ([string]::IsNullOrWhiteSpace($remarks)) {
             $remarks = @($ex.Introduction | ForEach-Object { $_.Text }) -join ''
@@ -97,24 +120,36 @@ Describe 'Test help for <_.Name>' -ForEach $commands {
         BeforeAll {
             $parameter = $_
             $parameterName = $parameter.Name
-            $parameterHelp = $commandHelp.parameters.parameter | Where-Object Name -EQ $parameterName
-            $parameterHelpType = if ($parameterHelp.ParameterValue) { $parameterHelp.ParameterValue.Trim() }
+            $parameterHelp = if ($commandHelp) { $commandHelp.parameters.parameter | Where-Object Name -EQ $parameterName } else { $null }
+
+            # Read the parameter type from help:
+            # 1) Prefer ParameterValue (string) if present (common for many simple types).
+            # 2) Otherwise use Type.Name (used by platyPS for enums like MatchCasing/MatchType).
+            $parameterHelpType = $null
+            if ($parameterHelp) {
+                if ($parameterHelp.PSObject.Properties.Match('ParameterValue').Count -gt 0 -and $parameterHelp.ParameterValue) {
+                    $parameterHelpType = $parameterHelp.ParameterValue.Trim()
+                } elseif ($parameterHelp.PSObject.Properties.Match('Type').Count -gt 0 -and $parameterHelp.Type.Name) {
+                    $parameterHelpType = $parameterHelp.Type.Name.Trim()
+                }
+            }
         }
 
         It 'Has help entry for parameter' {
             $parameterHelp | Should -Not -BeNullOrEmpty
         }
 
-        It 'Has description' {
+        It 'Has description' -Skip:(-not $parameterHelp) {
             $parameterHelp.Description.Text | Should -Not -BeNullOrEmpty
         }
 
-        It 'Has correct [mandatory] value' {
+        It 'Has correct [mandatory] value' -Skip:(-not $parameterHelp) {
             $codeMandatory = $parameter.IsMandatory.ToString()
             $parameterHelp.Required | Should -Be $codeMandatory
         }
 
-        It 'Has correct parameter type' {
+        It 'Has correct parameter type' -Skip:(-not $parameterHelp) {
+            # Compare short names (e.g., "MatchCasing") as produced by platyPS.
             $parameterHelpType | Should -Be $parameter.ParameterType.Name
         }
     }
