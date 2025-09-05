@@ -168,8 +168,7 @@
     try {
         # Resolve absolute path in case it is relative
         [ref] $dummy = $null
-        $absolutePath = $PSCmdlet.GetResolvedProviderPathFromPSPath($Path, $dummy)
-
+        $absolutePath = $PSCmdlet.GetResolvedProviderPathFromPSPath($Path, $dummy)[0]
         # if more than one string was given use foreach (so if input $Name is a string array)
         foreach ($input in $Name) {
             foreach ($item in [System.IO.Directory]::$($Method)($absolutePath, $input, $EnumerationOptions)) {
