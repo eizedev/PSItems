@@ -10,6 +10,11 @@ Properties {
     # Pester test results path used by the CI artifact upload
     $PSBPreference.Test.OutputFile = 'out/testResults.xml'
 
+    # only process Markdown help under docs/en-US
+    $PSBPreference.Help.SourcePath = 'docs/en-US'
+
+    # external help (MAML) output folder
+    $PSBPreference.Help.OutputPath = 'docs/en-US'
     # explicit Path
     $PSBPreference.Test.Path = 'tests'
 
