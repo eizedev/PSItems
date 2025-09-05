@@ -319,7 +319,7 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
-None
+### None
 
 ## OUTPUTS
 
@@ -335,5 +335,6 @@ Version: 0.7.0
 
 ## RELATED LINKS
 
-- https://learn.microsoft.com/dotnet/api/system.io.directoryinfo
-- https://learn.microsoft.com/dotnet/api/system.io.enumerationoptions
+[System.IO.Directory](https://learn.microsoft.com/dotnet/api/system.io.directoryinfo)
+
+[System.IO.EnumerationOptions](https://learn.microsoft.com/dotnet/api/system.io.enumerationoptions)
