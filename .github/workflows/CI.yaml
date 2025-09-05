@@ -40,9 +40,13 @@ jobs:
       - name: Analyze (PSScriptAnalyzer)
         run: ./build.ps1 -Task Analyze -Verbose
 
-      # Unit tests via PowerShellBuild (Pester under the hood)
+      # Ensure output folder exists before tests write artifacts (XML, logs)
+      - name: Prepare output folder
+        run: New-Item -ItemType Directory -Force -Path out | Out-Null
+
+      # Unit tests via PowerShellBuild (Pester under the hood), capture console log
       - name: Test (Pester)
-        run: ./build.ps1 -Task Test -Verbose
+        run: ./build.ps1 -Task Test -Verbose *>&1 | Tee-Object -FilePath out/pester-console.txt
 
       # Always upload Pester results so they are available even if tests fail
       - name: Upload Pester results
@@ -51,6 +55,16 @@ jobs:
         with:
           name: TestResults-${{ runner.os }}
           path: out/testResults.xml
+          if-no-files-found: warn
+
+      # Also upload the captured Pester console output (for debugging)
+      - name: Upload Pester console log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestConsole-${{ runner.os }}
+          path: out/pester-console.txt
+          if-no-files-found: ignore
 
   publish:
     name: Publish module
@@ -86,8 +100,29 @@ jobs:
       - name: Analyze
         run: ./build.ps1 -Task Analyze -Verbose
 
+      # Ensure output folder exists before tests write artifacts (XML, logs)
+      - name: Prepare output folder
+        run: New-Item -ItemType Directory -Force -Path out | Out-Null
+
       - name: Test
-        run: ./build.ps1 -Task Test -Verbose
+        run: ./build.ps1 -Task Test -Verbose *>&1 | Tee-Object -FilePath out/pester-console.txt
+
+      # Upload test artifacts from publish job too (useful when publish fails after tests)
+      - name: Upload Pester results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestResults-publish
+          path: out/testResults.xml
+          if-no-files-found: warn
+
+      - name: Upload Pester console log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: TestConsole-publish
+          path: out/pester-console.txt
+          if-no-files-found: ignore
 
       # Publish uses the API key from the environment variable (injected from Secrets)
       - name: Publish to PowerShell Gallery
