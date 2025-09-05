@@ -2,7 +2,7 @@
 # Hardened for PSItems:
 # - Fails when external help is missing or auto-generated.
 # - Validates examples (code + remarks/introduction).
-# - Validates parameter presence, mandatory flag, and type.
+# - Validates parameter presence, mandatory flag, and type (robust for platyPS output).
 # - Link checks are lenient by default; set HELP_LINKS_STRICT=true to fail on link errors.
 
 BeforeDiscovery {
@@ -121,36 +121,42 @@ Describe 'Test help for <_.Name>' -ForEach $commands {
             $parameter = $_
             $parameterName = $parameter.Name
             $parameterHelp = if ($commandHelp) { $commandHelp.parameters.parameter | Where-Object Name -EQ $parameterName } else { $null }
-
-            # Read the parameter type from help:
-            # 1) Prefer ParameterValue (string) if present (common for many simple types).
-            # 2) Otherwise use Type.Name (used by platyPS for enums like MatchCasing/MatchType).
-            $parameterHelpType = $null
-            if ($parameterHelp) {
-                if ($parameterHelp.PSObject.Properties.Match('ParameterValue').Count -gt 0 -and $parameterHelp.ParameterValue) {
-                    $parameterHelpType = $parameterHelp.ParameterValue.Trim()
-                } elseif ($parameterHelp.PSObject.Properties.Match('Type').Count -gt 0 -and $parameterHelp.Type.Name) {
-                    $parameterHelpType = $parameterHelp.Type.Name.Trim()
-                }
-            }
         }
 
         It 'Has help entry for parameter' {
             $parameterHelp | Should -Not -BeNullOrEmpty
         }
 
-        It 'Has description' -Skip:(-not $parameterHelp) {
-            $parameterHelp.Description.Text | Should -Not -BeNullOrEmpty
+        It 'Has description' {
+            # Do not skip: if it's missing, we want a clear failure.
+            $ph = $parameterHelp
+            $ph | Should -Not -BeNullOrEmpty
+            $ph.Description.Text | Should -Not -BeNullOrEmpty
         }
 
-        It 'Has correct [mandatory] value' -Skip:(-not $parameterHelp) {
+        It 'Has correct [mandatory] value' {
+            $ph = $parameterHelp
+            $ph | Should -Not -BeNullOrEmpty
             $codeMandatory = $parameter.IsMandatory.ToString()
-            $parameterHelp.Required | Should -Be $codeMandatory
+            $ph.Required | Should -Be $codeMandatory
         }
 
-        It 'Has correct parameter type' -Skip:(-not $parameterHelp) {
-            # Compare short names (e.g., "MatchCasing") as produced by platyPS.
-            $parameterHelpType | Should -Be $parameter.ParameterType.Name
+        It 'Has correct parameter type' {
+            $ph = $parameterHelp
+            $ph | Should -Not -BeNullOrEmpty
+
+            # Robust extraction of type from platyPS-generated help:
+            #  - Many parameters use .ParameterValue (e.g. "String", "SwitchParameter", "String[]")
+            #  - Enum-like parameters (e.g. MatchCasing/MatchType) are emitted as .Type.Name
+            $helpType = $null
+            if ($ph.PSObject.Properties.Match('ParameterValue').Count -gt 0 -and $ph.ParameterValue) {
+                $helpType = $ph.ParameterValue.Trim()
+            } elseif ($ph.PSObject.Properties.Match('Type').Count -gt 0 -and $ph.Type -and $ph.Type.Name) {
+                $helpType = $ph.Type.Name.Trim()
+            }
+
+            $expectedType = $parameter.ParameterType.Name
+            $helpType | Should -Be $expectedType
         }
     }
 
