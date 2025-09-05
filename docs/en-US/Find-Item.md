@@ -1,7 +1,7 @@
 ---
 external help file: PSItems-help.xml
 Module Name: PSItems
-online version: https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-7.0
+online version: https://learn.microsoft.com/dotnet/api/system.io.directoryinfo?view=net-7.0
 schema: 2.0.0
 ---
 
@@ -9,58 +9,90 @@ schema: 2.0.0
 
 ## SYNOPSIS
 
-Simple and fast function for finding any item on the filesystem (like find on linux/unix)
+Simple and fast function for finding any item on the filesystem (similar to `find` on Linux/Unix).
 
 ## SYNTAX
 
 ```
-Find-Item [[-Path] <String>] [[-Name] <String[]>] [-Type <String>] [-Recurse] [-IgnoreInaccessible <Boolean>]
- [-As <String>] [-MatchCasing <String>] [-AttributesToSkip <String[]>] [-MatchType <String>] [-Depth <Int32>]
- [-IncludeSpecialDirectories] [<CommonParameters>]
+Find-Item [[-Path] <String>] [[-Name] <String[]>] [-Iname <String[]>] [-Type <String>] [-Recurse]
+ [-IgnoreInaccessible <Boolean>] [-As <String>] [-MatchCasing <String>] [-AttributesToSkip <Object[]>]
+ [-MatchType <String>] [-Depth <Int32>] [-MinDepth <Int32>] [-IncludeSpecialDirectories]
+ [<CommonParameters>]
 ```
 
 ## DESCRIPTION
 
-Function that uses the EnumerateFiles, EnumerateDirectories, EnumerateFileSystemEntries method from the dotnet class System.Io.Directory to quickly find any item on the filesystem
-Item could be a directory or a file or anything else
+Uses the .NET `System.IO.Directory` / `System.IO.DirectoryInfo` `Enumerate*` methods together with
+`System.IO.EnumerationOptions` to quickly enumerate items (directories, files, or both).
 
-Class System.IO.EnumerationOptions does not exist in Powershell \< 6 (so this function is not supported in the normal PowerShell, only in PowerShell Core/7)
+- Requires **PowerShell 7+** (`EnumerationOptions` is not available in Windows PowerShell 5.1).
+- `-Path` **supports wildcards** and expands to **multiple root paths** (Linux-like shell globbing behavior).
+- `-Name` matches according to **platform default casing**
+  (Windows: case-insensitive; Linux/macOS: case-sensitive).
+- `-Iname` forces **case-insensitive** matching (Linux `find -iname`).
+- `-Depth` maps to `MaxRecursionDepth` (and implies recursion); `-MinDepth` behaves like Linux `-mindepth`.
+- Output can be **strings** (fastest) or **typed** `FileSystemInfo` (`FileInfo`/`DirectoryInfo`).
 
 ## EXAMPLES
 
 ### EXAMPLE 1
 
 ```
-Find-Item -Path c:\windows -Name '*.exe' -As FileInfo
+Find-Item -Path $PSHOME -Name '*.psd1' -Recurse
 ```
 
-Find all items with file format exe in c:\windows without subdirectory and return each file as FileSystemInfo object
+Find all module manifest files under the PowerShell installation directory (cross-platform).
 
 ### EXAMPLE 2
 
 ```
-psfind
+Find-Item -Path $PSHOME -Iname '*.psm1' -Recurse | Select-Object -First 5
 ```
 
-uses alias psfind for Find-Item.
-returns all items (files + directories) with full path in current folder
+Linux-style case-insensitive name match on all platforms; show first 5 module files.
 
 ### EXAMPLE 3
 
 ```
-search
+Find-Item -Path $PSHOME -Depth 1 -Name '*.dll'
 ```
 
-uses alias search for Find-Item.
-returns all items (files + directories) with full path in current folder
+Limit search to the start directory and its immediate subdirectories (Linux `-maxdepth 1`).
+
+### EXAMPLE 4
+
+```
+Find-Item -Path $PSHOME -MinDepth 2 -Iname '*module*' -Recurse
+```
+
+Only return items at depth ≥ 2 relative to `-Path` (Linux `-mindepth`).
+
+### EXAMPLE 5
+
+```
+Find-Item -Path $PSHOME -Type File -As FileSystemInfo -Recurse |
+  Where-Object Length -gt 1MB |
+  Select-Object -First 5 FullName, Length
+```
+
+Typed output with a size filter that works cross-platform (PowerShell supports size literals like `1MB`).
+
+### EXAMPLE 6
+
+```
+Find-Item -Path 'C:\Users\*\Documents' -Type File -Name '*.txt' -Depth 2
+```
+
+Windows example: wildcard-expanded **multiple roots** (every matching `Users\<name>\Documents`).
 
 ## PARAMETERS
 
 ### -Path
 
-Root path to search items for.
-Defaults to current working directory.
-The relative or absolute path to the directory to search. This string is not case-sensitive.
+Root path to search items for. Defaults to current working directory.
+Relative or absolute path to the directory to search.
+
+> Wildcards are allowed (e.g., `C:\Users\*\Documents`) and will expand to **multiple** root paths.
 
 ```yaml
 Type: String
@@ -71,32 +103,19 @@ Required: False
 Position: 1
 Default value: $pwd
 Accept pipeline input: False
-Accept wildcard characters: False
+Accept wildcard characters: True
 ```
 
 ### -Name
 
-This is the searchPattern for the Enumeration class.
-The search string to match against the names of items in path.
-This parameter can contain a combination of valid literal and wildcard characters,
-but it doesn't support regular expressions.
-You can use the * (asterisk) to match zero or more characters in that position.
-You can also use the ? (question mark) to exactly match one character in that position.
+Search pattern(s) for enumeration. Supports `*` and `?` wildcards (no regex).
+On **Windows** (platform default), matching is case-insensitive. On **Linux/macOS**, it is case-sensitive.
 
-Default is '*' = all items
+Default is `'*'` (all items). Accepts multiple patterns (e.g., `'*.exe','*.log'`).
 
-Characters other than the wildcard are literal characters.
-For example, the searchPattern string "*t" searches for all names in path ending with the letter "t". The searchPattern string "s*" searches for all names in path beginning with the letter "s".
-
-One ore more strings to search for (f.e.
-'*.exe' OR '*.exe','*.log' OR 'foo*.log')
-
-When you use the asterisk wildcard character in a searchPattern such as "*.txt", the number of characters in the specified extension affects the search as follows:
-
-- If the specified extension is exactly three characters long, the method returns files with extensions that begin with the specified extension. For example, "*.xls" returns both "book.xls" and "book.xlsx".
-- In all other cases, the method returns files that exactly match the specified extension. For example, "*.ai" returns "file.ai" but not "file.aif".
-
-When you use the question mark wildcard character, this method returns only files that match the specified file extension. For example, given two files, "file1.txt" and "file1.txtother", in a directory, a search pattern of "file?.txt" returns just the first file, whereas a search pattern of "file*.txt" returns both files.
+> Wildcard notes from .NET:
+> - A three-character extension like `*.xls` may also match longer extensions (e.g., `.xlsx`).
+> - `?` matches exactly one character; `*` matches zero or more characters.
 
 ```yaml
 Type: String[]
@@ -110,9 +129,26 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### -Iname
+
+Case-insensitive variant of `-Name` (Linux `find -iname`). If provided and `-MatchCasing` is not set,
+the function uses `CaseInsensitive` matching. Patterns are merged with or replace `-Name`.
+
+```yaml
+Type: String[]
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: (not set)
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
 ### -Type
 
-Only search items of specific type: Directory, File or All
+Only search items of a specific type: `Directory`, `File`, or `All`.
 
 ```yaml
 Type: String
@@ -128,8 +164,7 @@ Accept wildcard characters: False
 
 ### -Recurse
 
-EnumerationOptions property RecurseSubdirectories.
-Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
+Recurse into subdirectories. Maps to `EnumerationOptions.RecurseSubdirectories`.
 
 ```yaml
 Type: SwitchParameter
@@ -145,8 +180,8 @@ Accept wildcard characters: False
 
 ### -IgnoreInaccessible
 
-EnumerationOptions property IgnoreInaccessible.
-Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
+Skip entries when access is denied (e.g., `UnauthorizedAccessException`, `SecurityException`).
+Maps to `EnumerationOptions.IgnoreInaccessible`.
 
 ```yaml
 Type: Boolean
@@ -162,8 +197,10 @@ Accept wildcard characters: False
 
 ### -As
 
-Could be String or FileInfo.
-OutputType of found items will be an array of strings or an array of FileSystemInfo Objects.
+Output type:
+- `String` → full paths (fastest)
+- `FileSystemInfo` → native `FileInfo`/`DirectoryInfo` via `DirectoryInfo.Enumerate*`
+- `FileInfo` → backward compatibility; files as `FileInfo`, directories as `DirectoryInfo`
 
 ```yaml
 Type: String
@@ -179,8 +216,8 @@ Accept wildcard characters: False
 
 ### -MatchCasing
 
-EnumerationOptions property MatchCasing.
-Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
+Controls case sensitivity of pattern matching (maps to `EnumerationOptions.MatchCasing`).
+`PlatformDefault` = case-insensitive on Windows, case-sensitive on Linux/macOS.
 
 ```yaml
 Type: String
@@ -196,25 +233,24 @@ Accept wildcard characters: False
 
 ### -AttributesToSkip
 
-EnumerationOptions property AttributesToSkip.
-Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
+File attributes to skip (maps to `EnumerationOptions.AttributesToSkip`).
+Defaults to `Hidden` and `System`. Use `0` to disable skipping.
 
 ```yaml
-Type: String[]
+Type: Object[]
 Parameter Sets: (All)
 Aliases:
 
 Required: False
 Position: Named
-Default value: @('Hidden', 'System')
+Default value: @('Hidden','System')
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -MatchType
 
-EnumerationOptions property MatchType.
-Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
+Pattern matching engine (maps to `EnumerationOptions.MatchType`): `Simple` or `Win32`.
 
 ```yaml
 Type: String
@@ -223,15 +259,32 @@ Aliases:
 
 Required: False
 Position: Named
-Default value: None
+Default value: Simple
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
 ### -Depth
 
-EnumerationOptions property Depth.
-Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
+Maximum recursion depth (maps to `EnumerationOptions.MaxRecursionDepth`).
+When specified, recursion is implied. `0` means only the start directory.
+
+```yaml
+Type: Int32
+Parameter Sets: (All)
+Aliases:
+
+Required: False
+Position: Named
+Default value: (not set)
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -MinDepth
+
+Minimum directory depth relative to `-Path` before items are returned (Linux `-mindepth`).
+`0` includes items at the root level.
 
 ```yaml
 Type: Int32
@@ -247,7 +300,7 @@ Accept wildcard characters: False
 
 ### -IncludeSpecialDirectories
 
-EnumerationOptions property ReturnSpecialDirectories. Check <https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0> for more information.
+Return the special directory entries `.` and `..` if specified (maps to `EnumerationOptions.ReturnSpecialDirectories`).
 
 ```yaml
 Type: SwitchParameter
@@ -266,6 +319,8 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
+_None._
+
 ## OUTPUTS
 
 ### System.String
@@ -275,11 +330,10 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 ## NOTES
 
 Author: Eizedev
-Last Modified: Jul 13, 2022
-Version: 1.1
+Last Modified: Sep 5, 2025
+Version: 0.7.0
 
 ## RELATED LINKS
 
-[https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-7.0](https://docs.microsoft.com/en-us/dotnet/api/system.io.directoryinfo?view=net-7.0)
-
-[https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0](https://docs.microsoft.com/en-us/dotnet/api/system.io.enumerationoptions?view=net-7.0)
+- https://learn.microsoft.com/dotnet/api/system.io.directoryinfo
+- https://learn.microsoft.com/dotnet/api/system.io.enumerationoptions
