@@ -30,7 +30,7 @@
     Copyright            = '(c) Eizedev. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description          = 'Fast, cross-platform PowerShell module to find files & folders, grep file content, and measure sizes—Linux-style find/grep/du made simple.'
+    Description          = 'Fast, cross-platform PowerShell module to find files & folders, grep file content, and measure sizes — Linux-style find/grep/du made simple.'
 
     # Minimum version of the PowerShell engine required by this module
     PowerShellVersion    = '7.0.0'
