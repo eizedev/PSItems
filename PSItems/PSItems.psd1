@@ -15,25 +15,25 @@
     ModuleVersion     = '0.7.0'
 
     # Supported PSEditions
-    # CompatiblePSEditions = @('Core')
+    CompatiblePSEditions = @('Core')
 
     # ID used to uniquely identify this module
-    GUID              = '524a859f-1fd1-4ef0-a4d7-8169ca31a6ec'
+    GUID                 = '524a859f-1fd1-4ef0-a4d7-8169ca31a6ec'
 
     # Author of this module
-    Author            = 'Eizedev'
+    Author               = 'Eizedev'
 
     # Company or vendor of this module
-    CompanyName       = 'Eizedev'
+    CompanyName          = 'Eizedev'
 
     # Copyright statement for this module
-    Copyright         = '(c) Eizedev. All rights reserved.'
+    Copyright            = '(c) Eizedev. All rights reserved.'
 
     # Description of the functionality provided by this module
-    Description       = 'A PowerShell module that finds files, file content and directories as well as file and directory information the quick and easy way!'
+    Description          = 'Fast, cross-platform PowerShell module to find files & folders, grep file content, and measure sizes—Linux-style find/grep/du made simple.'
 
     # Minimum version of the PowerShell engine required by this module
-    PowerShellVersion = '7.0.0'
+    PowerShellVersion    = '7.0.0'
 
     # Name of the PowerShell host required by this module
     # PowerShellHostName = ''
@@ -69,16 +69,16 @@
     # NestedModules = @()
 
     # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
-    FunctionsToExport = @('Find-Item', 'Get-ItemSize', 'Find-ItemContent')
+    FunctionsToExport    = @('Find-Item', 'Get-ItemSize', 'Find-ItemContent')
 
     # Cmdlets to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no cmdlets to export.
-    CmdletsToExport   = '*'
+    CmdletsToExport      = '*'
 
     # Variables to export from this module
-    VariablesToExport = '*'
+    VariablesToExport    = '*'
 
     # Aliases to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no aliases to export.
-    AliasesToExport   = @('search', 'size', 'psgrep', 'psfind', 'pssize')
+    AliasesToExport      = @('search', 'size', 'psgrep', 'psfind', 'pssize')
 
     # DSC resources to export from this module
     # DscResourcesToExport = @()
@@ -90,12 +90,16 @@
     # FileList = @()
 
     # Private data to pass to the module specified in RootModule/ModuleToProcess. This may also contain a PSData hashtable with additional module metadata used by PowerShell.
-    PrivateData       = @{
+    PrivateData          = @{
 
         PSData = @{
 
             # Tags applied to this module. These help with module discovery in online galleries.
-            Tags         = @('Get-ChildItem', 'FileManagement', 'find', 'search', 'du', 'Find-File', 'size', 'pwsh', 'directory', 'item', 'grep' )
+            Tags         = @(
+                'PowerShell', 'PowerShellModule', 'Filesystem', 'Search', 'Find',
+                'Grep', 'Du', 'Performance', 'psfind', 'psgrep', 'pssize',
+                'pwsh', 'CrossPlatform', 'Windows', 'Linux', 'macOS'
+            )
 
             # A URL to the license for this module.
             LicenseUri   = 'https://github.com/eizedev/PSItems/blob/master/LICENSE'
