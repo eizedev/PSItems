@@ -10,7 +10,7 @@
 | ---------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | ![pwsh 7+][pwsh-badge] | ![Platforms][platforms-badge] | [![PSSA][pssa-badge]][pssa-workflow] [![DevSkim][devskim-badge]][devskim-workflow] [![Dependabot][dependabot-badge]][dependabot-link] |
 
-![Logo](res/img/logo.png)
+![Logo](res/img/psitems-logo.png)
 
 ---
 
