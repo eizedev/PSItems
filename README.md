@@ -30,9 +30,7 @@ A PowerShell module to **find files/directories**, **search file content**, and 
       - [Find-Item (`psfind`)](#find-item-psfind)
       - [Get-ItemSize (`pssize`)](#get-itemsize-pssize)
       - [Find-ItemContent (`psgrep`)](#find-itemcontent-psgrep)
-  - [Testing and Speed](#testing-and-speed)
-    - [1 - Windows directory recursively - Return FullName strings](#1---windows-directory-recursively---return-fullname-strings)
-    - [2 - Windows directory recursively - Return FileInfo objects](#2---windows-directory-recursively---return-fileinfo-objects)
+  - [Testing \& Speed](#testing--speed)
   - [Contributing](#contributing)
 
 ---
@@ -159,44 +157,20 @@ ForEach-Object {
 
 ---
 
-## Testing and Speed
+## Testing & Speed
 
-> You’ll find historical measurements below. New benchmarks are coming soon. Much faster now.
+Reproducible benchmarks (including copy-pasteable commands) live here:
 
-> Testsystem was a windows 10 Lenovo T480 (SSD + Indexing disabled).
+- [docs/benchmarks/Testing-and-Speed.md](docs/benchmarks/Testing-and-Speed.md)
 
-### 1 - Windows directory recursively - Return FullName strings
+**Highlights from the sample run in that doc (Windows, SSD):**
+- Names only (strings): PSItems ~**3.23 s** vs Get-ChildItem ~**17.16 s** → **~5.3× faster**
+- Typed output (objects): PSItems ~**3.56 s** vs Get-ChildItem ~**14.19 s** → **~4.0× faster**
+- Depth-limited (Depth = 2): PSItems ~**2.14 s** vs Get-ChildItem ~**11.96 s** → **~5.6× faster**
+- PSItems 0.7.0 vs 0.3.6 (names-only): ~**3.37 s** vs ~**5.70 s** → **~1.7× faster**
 
-Returned will be an array of the path of all files (FullName).
-
-```powershell
-Measure-Command { $windir = search C:\Windows\ '*' -Recurse -AttributesToSkip 0 }
-```
-
-Finding all items (files, directories...) in `C:Windows` directory including all subdirectories (`-Recurse`) as well as hidden and system files (`-AttributesToSkip 0`) using the `Find-Item` function
-
-The alias `search` was used and for the `-Path` (`C:\windows`) and `-Name` (`'*'`) parameter the first and second position were used:
-
-![image](https://user-images.githubusercontent.com/6794362/183594261-2f14beb8-be96-4181-8719-1b95ff271e62.png)
-
-In about 1 minute the function found all files, directories etc. in the complete windows directory and returned an array of all item `FullName` properties.
-
-### 2 - Windows directory recursively - Return FileInfo objects
-
-Returned will be an array of objects (FileInfo) of all items. Same as using Get-ChildItem.
-
-```powershell
-Measure-Command { $windir = search C:\Windows\ '*' -Recurse -AttributesToSkip 0 -As FileInfo }
-```
-
-Finding all items (files, directories...) in `C:Windows` directory including all subdirectories (`-Recurse`) as well as hidden and system files (`-AttributesToSkip 0`) using the `Find-Item` function.
-
-The alias `search` was used and for the `-Path` (`C:\windows`) and `-Name` (`'*'`) parameter the first and second position were used:
-
-![image](https://user-images.githubusercontent.com/6794362/183596627-73995cca-a602-4ae7-9e75-8fe8b6d14d4a.png)
-![image](https://user-images.githubusercontent.com/6794362/183596709-de8718c9-e361-4843-96f5-34e9677f840e.png)
-
-In about 2 minutes the function found all files, directories etc. in the complete windows directory and returned an array of FileInfo objects of all items with all properties. As with Get-ChildItem, you can simply continue to use the individual objects.
+> Results vary by machine and dataset. The linked doc shows the exact commands and tables you can re-run locally.
+> If you find better/other test cases, please open a PR or issue.
 
 ---
 
