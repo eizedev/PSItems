@@ -1,4 +1,4 @@
-﻿function Find-Item {
+function Find-Item {
     <#
     .SYNOPSIS
     Simple and fast function for finding any item on the filesystem (like find on Linux/Unix)
