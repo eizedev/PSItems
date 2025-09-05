@@ -27,6 +27,7 @@ A PowerShell module to **find files/directories**, **search file content**, and 
     - [1 - Windows directory recursively - Return FullName strings](#1---windows-directory-recursively---return-fullname-strings)
     - [2 - Windows directory recursively - Return FileInfo objects](#2---windows-directory-recursively---return-fileinfo-objects)
   - [Contributing](#contributing)
+    - [Validate docs locally (platyPS)](#validate-docs-locally-platyps)
 
 ---
 
@@ -200,6 +201,22 @@ PRs that improve performance, reliability, cross-platform behavior, or docs are 
 
 - File issues if you have some: <https://github.com/eizedev/PSItems/issues>
 - Run tests locally: `./build.ps1 -Bootstrap; ./build.ps1 -Task Analyze,Test`
+
+### Validate docs locally (platyPS)
+
+Before pushing, validate that the Markdown help converts to external help (MAML) without errors:
+
+```pwsh
+pwsh -NoProfile -Command "Install-Module platyPS -Scope CurrentUser -Force; New-ExternalHelp -Path 'docs/en-US' -OutputPath 'out/en-US' -Force -ErrorAction Stop"
+```
+
+**What this does**
+- Installs/updates **platyPS** for the current user.
+- Converts all Markdown help under `docs/en-US` into MAML files in `out/en-US`.
+- Exits with an error if structural issues are detected (useful for catching CI failures early).
+
+> Tip: If you see “**Expect Heading**” errors, it almost always means a missing `###` subheading or an unclosed code block above the failing line.
+
 
 ---
 
