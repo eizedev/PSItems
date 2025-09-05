@@ -17,7 +17,7 @@
     <command:syntax>
       <command:syntaxItem>
         <maml:name>Find-Item</maml:name>
-        <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="1" aliases="none">
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
           <maml:name>Path</maml:name>
           <maml:description>
             <maml:para>Root path to search items for. Defaults to current working directory. Relative or absolute path to the directory to search.</maml:para>
@@ -110,9 +110,14 @@
           <maml:description>
             <maml:para>Controls case sensitivity of pattern matching (maps to `EnumerationOptions.MatchCasing`). `PlatformDefault` = case-insensitive on Windows, case-sensitive on Linux/macOS.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" command:variableLength="false">PlatformDefault</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">CaseSensitive</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">CaseInsensitive</command:parameterValue>
+          </command:parameterValueGroup>
+          <command:parameterValue required="true" variableLength="false">MatchCasing</command:parameterValue>
           <dev:type>
-            <maml:name>String</maml:name>
+            <maml:name>MatchCasing</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>PlatformDefault</dev:defaultValue>
@@ -134,9 +139,13 @@
           <maml:description>
             <maml:para>Pattern matching engine (maps to `EnumerationOptions.MatchType`): `Simple` or `Win32`.</maml:para>
           </maml:description>
-          <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+          <command:parameterValueGroup>
+            <command:parameterValue required="false" command:variableLength="false">Simple</command:parameterValue>
+            <command:parameterValue required="false" command:variableLength="false">Win32</command:parameterValue>
+          </command:parameterValueGroup>
+          <command:parameterValue required="true" variableLength="false">MatchType</command:parameterValue>
           <dev:type>
-            <maml:name>String</maml:name>
+            <maml:name>MatchType</maml:name>
             <maml:uri />
           </dev:type>
           <dev:defaultValue>Simple</dev:defaultValue>
@@ -176,10 +185,22 @@
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="proga">
+          <maml:name>ProgressAction</maml:name>
+          <maml:description>
+            <maml:para>Default PowerShell7 progressaction</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
+          <dev:type>
+            <maml:name>ActionPreference</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
-      <command:parameter required="false" variableLength="true" globbing="true" pipelineInput="False" position="1" aliases="none">
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="1" aliases="none">
         <maml:name>Path</maml:name>
         <maml:description>
           <maml:para>Root path to search items for. Defaults to current working directory. Relative or absolute path to the directory to search.</maml:para>
@@ -273,9 +294,9 @@
         <maml:description>
           <maml:para>Controls case sensitivity of pattern matching (maps to `EnumerationOptions.MatchCasing`). `PlatformDefault` = case-insensitive on Windows, case-sensitive on Linux/macOS.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">MatchCasing</command:parameterValue>
         <dev:type>
-          <maml:name>String</maml:name>
+          <maml:name>MatchCasing</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>PlatformDefault</dev:defaultValue>
@@ -297,9 +318,9 @@
         <maml:description>
           <maml:para>Pattern matching engine (maps to `EnumerationOptions.MatchType`): `Simple` or `Win32`.</maml:para>
         </maml:description>
-        <command:parameterValue required="true" variableLength="false">String</command:parameterValue>
+        <command:parameterValue required="true" variableLength="false">MatchType</command:parameterValue>
         <dev:type>
-          <maml:name>String</maml:name>
+          <maml:name>MatchType</maml:name>
           <maml:uri />
         </dev:type>
         <dev:defaultValue>Simple</dev:defaultValue>
@@ -339,6 +360,18 @@
           <maml:uri />
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="proga">
+        <maml:name>ProgressAction</maml:name>
+        <maml:description>
+          <maml:para>Default PowerShell7 progressaction</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
+        <dev:type>
+          <maml:name>ActionPreference</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes>
@@ -605,6 +638,18 @@
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="proga">
+          <maml:name>ProgressAction</maml:name>
+          <maml:description>
+            <maml:para>Default PowerShell7 progressaction</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
+          <dev:type>
+            <maml:name>ActionPreference</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
@@ -765,6 +810,18 @@
           <maml:uri />
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="proga">
+        <maml:name>ProgressAction</maml:name>
+        <maml:description>
+          <maml:para>Default PowerShell7 progressaction</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
+        <dev:type>
+          <maml:name>ActionPreference</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes />
@@ -1050,6 +1107,18 @@
           </dev:type>
           <dev:defaultValue>False</dev:defaultValue>
         </command:parameter>
+        <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="proga">
+          <maml:name>ProgressAction</maml:name>
+          <maml:description>
+            <maml:para>Default PowerShell7 progressaction</maml:para>
+          </maml:description>
+          <command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
+          <dev:type>
+            <maml:name>ActionPreference</maml:name>
+            <maml:uri />
+          </dev:type>
+          <dev:defaultValue>None</dev:defaultValue>
+        </command:parameter>
       </command:syntaxItem>
     </command:syntax>
     <command:parameters>
@@ -1228,6 +1297,18 @@
           <maml:uri />
         </dev:type>
         <dev:defaultValue>False</dev:defaultValue>
+      </command:parameter>
+      <command:parameter required="false" variableLength="true" globbing="false" pipelineInput="False" position="named" aliases="proga">
+        <maml:name>ProgressAction</maml:name>
+        <maml:description>
+          <maml:para>Default PowerShell7 progressaction</maml:para>
+        </maml:description>
+        <command:parameterValue required="true" variableLength="false">ActionPreference</command:parameterValue>
+        <dev:type>
+          <maml:name>ActionPreference</maml:name>
+          <maml:uri />
+        </dev:type>
+        <dev:defaultValue>None</dev:defaultValue>
       </command:parameter>
     </command:parameters>
     <command:inputTypes />

@@ -23,20 +23,38 @@ This project uses **PowerShellBuild** under the hood. The default tasks will sta
 
 ---
 
-## Validate docs locally (platyPS)
+## Sync & validate docs with platyPS
 
-Before pushing, validate that the Markdown help converts to external help (MAML) without errors:
+PSItems keeps its user help in Markdown under `docs/en-US` and generates external help (MAML) for runtime. Use platyPS to keep the two in sync.
 
-```pwsh
+### A) Quick sync (update Markdown from live module metadata)
+
+If you changed parameters/types/examples, update the Markdown based on the module:
+
+pwsh -NoProfile -Command "Install-Module platyPS -Scope CurrentUser -Force; Update-MarkdownHelpModule -Path 'docs/en-US' -Module 'PSItems'"
+
+> This **modifies** files in `docs/en-US`. Review and commit the changes.
+
+### B) Structural validation (catch malformed Markdown before CI)
+
+Make sure Markdown can be converted into external help (fails on missing headings, unclosed code fences, etc.):
+
 pwsh -NoProfile -Command "Install-Module platyPS -Scope CurrentUser -Force; New-ExternalHelp -Path 'docs/en-US' -OutputPath 'docs/en-US' -Force -ErrorAction Stop"
-```
 
-**What this does**
-- Installs/updates **platyPS** for the current user.
-- Converts all Markdown help under `docs/en-US` into MAML files in `docs/en-US`.
-- Exits with an error if structural issues are detected (useful for catching CI failures early).
+- Succeeds silently if docs are structurally valid.
+- Fails with a useful error if something is off (“Expect Heading” usually means a missing `###` subheading or an unclosed code block).
 
-> Tip: If you see “**Expect Heading**” errors, it almost always means a missing `###` subheading or an unclosed code block above the failing line.
+### (Optional) CI guard to enforce up-to-date Markdown
+
+Add a lightweight check that fails if `Update-MarkdownHelpModule` would change files:
+
+pwsh -NoProfile -Command "
+  Install-Module platyPS -Scope CurrentUser -Force;
+  Update-MarkdownHelpModule -Path 'docs/en-US' -Module 'PSItems';
+  if (git -c core.safecrlf=false status --porcelain docs/en-US) {
+    Write-Error 'Markdown help is out of date. Run Update-MarkdownHelpModule and commit.' -ErrorAction Stop
+  }
+"
 
 ---
 
