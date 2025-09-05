@@ -4,9 +4,14 @@ Properties {
 
     # Default help locale for generated help content
     $PSBPreference.Help.DefaultLocale = 'en-US'
+    # Default compatible output format for pester tests (github actions)
+    $PSBPreference.Test.OutputFormat = 'NUnitXml'
 
     # Pester test results path used by the CI artifact upload
     $PSBPreference.Test.OutputFile = 'out/testResults.xml'
+
+    # explicit Path
+    $PSBPreference.Test.Path = 'tests'
 
     # API key is taken from the environment variable (set by CI from repo Secret)
     $PSBPreference.Publish.PSRepositoryApiKey = $env:PSGALLERY_API_KEY
