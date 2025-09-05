@@ -1,8 +1,15 @@
 # PSItems
 
-| GitHub Actions                                                         | PS Gallery                                          | License                              | Issues                                 |
-| ---------------------------------------------------------------------- | --------------------------------------------------- | ------------------------------------ | -------------------------------------- |
-| [![GitHub Actions Status][github-actions-badge]][github-actions-build] | [![PowerShell Gallery][psgallery-badge]][psgallery] | [![License][license-badge]][license] | [![Open Issues][issues-badge]][issues] |
+<!-- === Badges: Core status & distribution === -->
+| GitHub Actions                                                         | PS Gallery (downloads + version)                                                                          | License                              | Issues / PRs                                                              |
+| ---------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------- | ------------------------------------ | ------------------------------------------------------------------------- |
+| [![GitHub Actions Status][github-actions-badge]][github-actions-build] | [![PowerShell Gallery][psgallery-badge]][psgallery] [![PS Gallery Version][psgallery-version]][psgallery] | [![License][license-badge]][license] | [![Open Issues][issues-badge]][issues] [![Open PRs][prs-badge]][prs-link] |
+
+
+<!-- === Badges: Quality & health (slim) === -->
+| Runtime (pwsh)         | Platforms                     | Quality & Maintenance                                                                                                                 |
+| ---------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
+| ![pwsh 7+][pwsh-badge] | ![Platforms][platforms-badge] | [![PSSA][pssa-badge]][pssa-workflow] [![DevSkim][devskim-badge]][devskim-workflow] [![Dependabot][dependabot-badge]][dependabot-link] |
 
 ---
 
@@ -209,11 +216,27 @@ PRs that improve performance, reliability, cross‑platform behavior, or docs ar
 
 ---
 
+<!-- Badge references -->
 [github-actions-badge]: https://github.com/eizedev/PSItems/workflows/CI/badge.svg
 [github-actions-build]: https://github.com/eizedev/PSItems/actions
 [psgallery-badge]: https://img.shields.io/powershellgallery/dt/PSItems.svg
+[psgallery-version]: https://img.shields.io/powershellgallery/v/PSItems.svg
 [psgallery]: https://www.powershellgallery.com/packages/PSItems
 [license-badge]: https://img.shields.io/github/license/eizedev/PSItems.svg
 [license]: LICENSE
 [issues-badge]: https://img.shields.io/github/issues-raw/eizedev/PSItems.svg
 [issues]: https://github.com/eizedev/PSItems/issues
+[prs-badge]: https://img.shields.io/github/issues-pr/eizedev/PSItems.svg
+[prs-link]: https://github.com/eizedev/PSItems/pulls
+[lastcommit-badge]: https://img.shields.io/github/last-commit/eizedev/PSItems.svg
+[repo]: https://github.com/eizedev/PSItems
+
+[pwsh-badge]: https://img.shields.io/badge/pwsh-7%2B-blue?logo=powershell
+[platforms-badge]: https://img.shields.io/badge/platforms-Windows%20%7C%20Linux%20%7C%20macOS-informational
+[dependabot-badge]: https://img.shields.io/badge/Dependabot-enabled-brightgreen?logo=dependabot
+[dependabot-link]: https://github.com/eizedev/PSItems/security/dependabot
+
+[pssa-badge]: https://github.com/eizedev/PSItems/actions/workflows/powershell.yml/badge.svg
+[pssa-workflow]: https://github.com/eizedev/PSItems/actions/workflows/powershell.yml
+[devskim-badge]: https://github.com/eizedev/PSItems/actions/workflows/devskim.yml/badge.svg
+[devskim-workflow]: https://github.com/eizedev/PSItems/actions/workflows/devskim.yml
