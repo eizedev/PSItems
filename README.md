@@ -10,7 +10,7 @@
 | ---------------------- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------- |
 | ![pwsh 7+][pwsh-badge] | ![Platforms][platforms-badge] | [![PSSA][pssa-badge]][pssa-workflow] [![DevSkim][devskim-badge]][devskim-workflow] [![Dependabot][dependabot-badge]][dependabot-link] |
 
-![Logo](res/logo.png)
+![Logo](res/img/logo.png)
 
 ---
 
@@ -65,7 +65,7 @@ psgrep 'TODO' $HOME -Name '*.ps1' -Recurse
 
 ## Linux `find` ↔︎ `Find-Item` (quick map)
 
-> Full guide with more options & examples: [docs/guides/Linux-find-compatibility.md](docs/guides/Linux-find-compatibility.md)
+> Full guide with more options & examples: [res/guides/Linux-find-compatibility.md](res/guides/Linux-find-compatibility.md)
 
 | Linux `find` feature          | `Find-Item` equivalent             | Example (unescape `\|` when copying)                                                |
 | ----------------------------- | ---------------------------------- | ----------------------------------------------------------------------------------- |
@@ -86,7 +86,7 @@ psgrep 'TODO' $HOME -Name '*.ps1' -Recurse
 
 Reproducible, copy‑pasteable benchmarks live here:
 
-- **[docs/benchmarks/Testing-and-Speed.md](docs/benchmarks/Testing-and-Speed.md)**
+- **[res/benchmarks/Testing-and-Speed.md](res/benchmarks/Testing-and-Speed.md)**
 
 **Highlights from a sample run (Windows, SSD):**
 - Names only (strings): PSItems ~**3.23 s** vs Get-ChildItem ~**17.16 s** → **~5.3× faster**
