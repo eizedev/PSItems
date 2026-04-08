@@ -86,7 +86,7 @@ psgrep 'TODO' $HOME -Name '*.ps1' -Recurse
 
 Reproducible, copy‑pasteable benchmarks live here:
 
-- **[res/benchmarks/Testing-and-Speed.md](res/benchmarks/Testing-and-Speed.md)**
+- **[res/benchmarks/Testing-and-Speed.md](res/benchmarks/testing-and-speed.md)**
 
 **Highlights from a sample run (Windows, SSD):**
 - Names only (strings): PSItems ~**3.23 s** vs Get-ChildItem ~**17.16 s** → **~5.3× faster**
